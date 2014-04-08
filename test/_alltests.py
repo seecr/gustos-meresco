@@ -39,7 +39,7 @@ import unittest
 from warnings import simplefilter
 simplefilter('default')
 
-from srurecordupdatelogtest import SruRecordUpdateLogTest
+from srurecordupdatelogwritertest import SruRecordUpdateLogWriterTest
 
 if __name__ == '__main__':
     unittest.main()

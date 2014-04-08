@@ -22,4 +22,4 @@
 #
 ## end license ##
 
-from srurecordupdatelog import SruRecordUpdateLog
+from srurecordupdatelogwriter import SruRecordUpdateLogWriter

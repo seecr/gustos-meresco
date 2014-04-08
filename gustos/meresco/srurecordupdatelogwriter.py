@@ -26,7 +26,7 @@ from meresco.core import Observable
 from meresco.components.log.utils import getFirst, getScoped, scopePresent
 from gustos.common.units import COUNT, MEMORY, TIME
 
-class SruRecordUpdateLog(Observable):
+class SruRecordUpdateLogWriter(Observable):
     def __init__(self, gustosGroup, scopeNames, **kwargs):
         Observable.__init__(self, **kwargs)
         if type(scopeNames) is not tuple:
