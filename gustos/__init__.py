@@ -22,4 +22,5 @@
 #
 ## end license ##
 
-from srurecordupdatelog import SruRecordUpdateLog
+from pkgutil import extend_path
+__path__ = extend_path(__path__, __name__)

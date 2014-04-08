@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ## begin license ##
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
@@ -22,4 +23,23 @@
 #
 ## end license ##
 
-from srurecordupdatelog import SruRecordUpdateLog
+from os import getuid
+assert getuid() != 0, "Do not run tests as 'root'"
+
+from os import system                             #DO_NOT_DISTRIBUTE
+from sys import path as sysPath                   #DO_NOT_DISTRIBUTE
+system('find .. -name "*.pyc" | xargs rm -f')     #DO_NOT_DISTRIBUTE
+                                                  #DO_NOT_DISTRIBUTE
+from glob import glob                             #DO_NOT_DISTRIBUTE
+for path in glob('../deps.d/*'):                  #DO_NOT_DISTRIBUTE
+    sysPath.insert(0, path)                       #DO_NOT_DISTRIBUTE
+sysPath.insert(0,'..')                            #DO_NOT_DISTRIBUTE
+
+import unittest
+from warnings import simplefilter
+simplefilter('default')
+
+from srurecordupdatelogtest import SruRecordUpdateLogTest
+
+if __name__ == '__main__':
+    unittest.main()
