@@ -1,0 +1,6 @@
+gustos1.1-common (<< 1.2)
+gustos1.1-common (>= 1.1.15)
+python-meresco-components (<< 4.10)
+python-meresco-components (>= 4.9.21)
+python-meresco-core (<< 4.1)
+python-meresco-core (>= 4.0.4.2)
