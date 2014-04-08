@@ -25,12 +25,15 @@
 from meresco.core import Observable
 from meresco.components.log.utils import getFirst, getScoped, scopePresent
 from gustos.common.units import COUNT, MEMORY, TIME
+from time import time
 
 class SruRecordUpdateLogWriter(Observable):
-    def __init__(self, gustosGroup, scopeNames, **kwargs):
+    def __init__(self, gustosGroup, scopeNames, interval=1.0, **kwargs):
         Observable.__init__(self, **kwargs)
         if type(scopeNames) is not tuple:
             raise ValueError('Expected tuple')
+        self._interval = interval
+        self._timeLastReportSent = 0
         self._gustosGroup = gustosGroup
         self._scopeNames = scopeNames
         self._counts = {
@@ -50,6 +53,9 @@ class SruRecordUpdateLogWriter(Observable):
             return
         self._counts['sruAdd'] += (0 if addIdentifier is None else 1)
         self._counts['sruDelete'] += (0 if deleteIdentifier is None else 1)
+        now = time()
+        if now - self._timeLastReportSent < self._interval:
+            return
         gustosReport['Upload count'] = {
                 'Add': { COUNT: self._counts['sruAdd'] },
                 'Delete': { COUNT: self._counts['sruDelete']},
@@ -63,4 +69,5 @@ class SruRecordUpdateLogWriter(Observable):
         duration = getFirst(httpResponse, 'duration')
         if duration:
             gustosReport['Upload duration'] = {'duration': {TIME: duration}}
-        self.do.report({self._gustosGroup: gustosReport})
+        self.do.report(values={self._gustosGroup: gustosReport})
+        self._timeLastReportSent = now

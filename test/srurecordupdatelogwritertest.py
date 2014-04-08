@@ -27,13 +27,14 @@ from weightless.core import be
 from meresco.core import Observable
 from gustos.meresco import SruRecordUpdateLogWriter
 from gustos.common.units import TIME, COUNT, MEMORY
+from time import sleep
 
 class SruRecordUpdateLogWriterTest(SeecrTestCase):
     def setUp(self):
         SeecrTestCase.setUp(self)
         self.observer = CallTrace('gustosclient')
         self.top = be((Observable(),
-            (SruRecordUpdateLogWriter(gustosGroup='gustosGroup', scopeNames=('update-scope',)),
+            (SruRecordUpdateLogWriter(gustosGroup='gustosGroup', scopeNames=('update-scope',), interval=0.1),
                 (self.observer,)
             )
         ))
@@ -43,7 +44,7 @@ class SruRecordUpdateLogWriterTest(SeecrTestCase):
         self.top.do.writeLog(collectedLog)
         self.assertEquals(['report'], self.observer.calledMethodNames())
         self.maxDiff = None
-        self.assertEquals(({
+        self.assertEquals({
             'gustosGroup': {
                 'Upload count': {
                     'Uploads': { COUNT: 1 },
@@ -57,7 +58,7 @@ class SruRecordUpdateLogWriterTest(SeecrTestCase):
                     'size': { MEMORY: 3120 },
                 },
             }
-        },), self.observer.calledMethods[-1].args)
+        }, self.observer.calledMethods[-1].kwargs['values'])
 
 
     def testDoNotLogIfNotEnabled(self):
@@ -66,6 +67,27 @@ class SruRecordUpdateLogWriterTest(SeecrTestCase):
         del collectedLog['update-scope']
         self.top.do.writeLog(collectedLog)
         self.assertEquals([], self.observer.calledMethodNames())
+
+    def testReportInterval(self):
+        def lastUploadsCount():
+            return self.observer.calledMethods[-1].kwargs['values']['gustosGroup']['Upload count']['Uploads'][COUNT]
+        def lastUploadSize():
+            return self.observer.calledMethods[-1].kwargs['values']['gustosGroup']['Upload size']['size'][MEMORY]
+        def createCollectedLog(size):
+            collectedLog = exampleUpdateLog()
+            collectedLog['httpRequest']['bodySize'] = [size]
+            return collectedLog
+        self.top.do.writeLog(createCollectedLog(size=100))
+        self.assertEquals(['report'], self.observer.calledMethodNames())
+        self.assertEquals(1, lastUploadsCount())
+        self.assertEquals(100, lastUploadSize())
+        self.top.do.writeLog(createCollectedLog(size=200))
+        self.assertEquals(['report'], self.observer.calledMethodNames())
+        sleep(0.11)
+        self.top.do.writeLog(createCollectedLog(size=400))
+        self.assertEquals(['report', 'report'], self.observer.calledMethodNames())
+        self.assertEquals(3, lastUploadsCount())
+        self.assertEquals(400, lastUploadSize())
 
 
 def exampleUpdateLog():
