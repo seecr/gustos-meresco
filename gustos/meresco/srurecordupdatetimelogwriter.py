@@ -24,43 +24,21 @@
 
 from meresco.core import Observable
 from meresco.components.log.utils import getFirst, getScoped, scopePresent
-from gustos.common.units import COUNT, MEMORY, TIME
-from time import time
+from gustos.common.units import MEMORY, TIME
 
-class SruRecordUpdateLogWriter(Observable):
-    def __init__(self, gustosGroup, scopeNames, interval=1.0, **kwargs):
+class SruRecordUpdateTimeLogWriter(Observable):
+    def __init__(self, gustosGroup, scopeNames, **kwargs):
         Observable.__init__(self, **kwargs)
         if type(scopeNames) is not tuple:
             raise ValueError('Expected tuple')
-        self._interval = interval
-        self._timeLastReportSent = 0
         self._gustosGroup = gustosGroup
         self._scopeNames = scopeNames
-        self._counts = {
-            'sruAdd': 0,
-            'sruDelete': 0,
-        }
 
     def writeLog(self, collectedLog):
         if not scopePresent(collectedLog, self._scopeNames):
             return
         gustosReport = {}
 
-        sruRecordUpdate = getScoped(collectedLog, scopeNames=self._scopeNames, key='sruRecordUpdate')
-        addIdentifier = getFirst(sruRecordUpdate, 'add')
-        deleteIdentifier = getFirst(sruRecordUpdate, 'delete')
-        if addIdentifier is None and deleteIdentifier is None:
-            return
-        self._counts['sruAdd'] += (0 if addIdentifier is None else 1)
-        self._counts['sruDelete'] += (0 if deleteIdentifier is None else 1)
-        now = time()
-        if now - self._timeLastReportSent < self._interval:
-            return
-        gustosReport['Upload count'] = {
-                'Add': { COUNT: self._counts['sruAdd'] },
-                'Delete': { COUNT: self._counts['sruDelete']},
-                'Uploads': { COUNT: self._counts['sruAdd'] + self._counts['sruDelete'] },
-            }
         httpRequest = getScoped(collectedLog, scopeNames=self._scopeNames, key='httpRequest')
         bodySize = getFirst(httpRequest, 'bodySize')
         if bodySize:
@@ -69,5 +47,5 @@ class SruRecordUpdateLogWriter(Observable):
         duration = getFirst(httpResponse, 'duration')
         if duration:
             gustosReport['Upload duration'] = {'duration': {TIME: duration}}
-        self.do.report(values={self._gustosGroup: gustosReport})
-        self._timeLastReportSent = now
+        if gustosReport:
+            self.do.report(values={self._gustosGroup: gustosReport})

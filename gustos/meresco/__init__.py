@@ -22,4 +22,5 @@
 #
 ## end license ##
 
-from srurecordupdatelogwriter import SruRecordUpdateLogWriter
+from srurecordupdatetimelogwriter import SruRecordUpdateTimeLogWriter
+from srurecordupdatecountlogwriter import SruRecordUpdateCountLogWriter
