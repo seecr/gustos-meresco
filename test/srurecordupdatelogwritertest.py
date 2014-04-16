@@ -78,19 +78,11 @@ class SruRecordUpdateLogWriterTest(SeecrTestCase):
         self.assertEquals([], self.observerCount.calledMethodNames())
 
     def testReportInterval(self):
-        def lastUploadsCount():
-            return self.observerCount.calledMethods[-1].kwargs['values']['gustosGroup']['Upload count']['Uploads'][COUNT]
-        def lastUploadSize():
-            return self.observerTime.calledMethods[-1].kwargs['values']['gustosGroup']['Upload size']['size'][MEMORY]
-        def createCollectedLog(size):
-            collectedLog = exampleUpdateLog()
-            collectedLog['httpRequest']['bodySize'] = [size]
-            return collectedLog
         self.top.do.writeLog(createCollectedLog(size=100))
         self.assertEquals(['report'], self.observerTime.calledMethodNames())
         self.assertEquals(['report'], self.observerCount.calledMethodNames())
-        self.assertEquals(1, lastUploadsCount())
-        self.assertEquals(100, lastUploadSize())
+        self.assertEquals(1, self.lastUploadsCount())
+        self.assertEquals(100, self.lastUploadSize())
         self.top.do.writeLog(createCollectedLog(size=200))
         self.assertEquals(['report', 'report'], self.observerTime.calledMethodNames())
         self.assertEquals(['report'], self.observerCount.calledMethodNames())
@@ -98,9 +90,52 @@ class SruRecordUpdateLogWriterTest(SeecrTestCase):
         self.top.do.writeLog(createCollectedLog(size=400))
         self.assertEquals(['report', 'report', 'report'], self.observerTime.calledMethodNames())
         self.assertEquals(['report', 'report'], self.observerCount.calledMethodNames())
-        self.assertEquals(3, lastUploadsCount())
-        self.assertEquals(400, lastUploadSize())
+        self.assertEquals(3, self.lastUploadsCount())
+        self.assertEquals(400, self.lastUploadSize())
 
+    def testReportIntervalEnabledForAll(self):
+        self.top.do.setInterval(0.1)
+        self.top.do.writeLog(createCollectedLog(size=100))
+        self.assertEquals(['report'], self.observerTime.calledMethodNames())
+        self.assertEquals(['report'], self.observerCount.calledMethodNames())
+        self.assertEquals(1, self.lastUploadsCount())
+        self.assertEquals(100, self.lastUploadSize())
+        self.top.do.writeLog(createCollectedLog(size=200))
+        self.assertEquals(['report'], self.observerTime.calledMethodNames())
+        self.assertEquals(['report'], self.observerCount.calledMethodNames())
+        sleep(0.11)
+        self.top.do.writeLog(createCollectedLog(size=400))
+        self.assertEquals(['report', 'report'], self.observerTime.calledMethodNames())
+        self.assertEquals(['report', 'report'], self.observerCount.calledMethodNames())
+        self.assertEquals(3, self.lastUploadsCount())
+        self.assertEquals(400, self.lastUploadSize())
+
+    def testReportIntervalDisabledForAll(self):
+        self.top.do.setInterval(None)
+        self.top.do.writeLog(createCollectedLog(size=100))
+        self.assertEquals(['report'], self.observerTime.calledMethodNames())
+        self.assertEquals(['report'], self.observerCount.calledMethodNames())
+        self.assertEquals(1, self.lastUploadsCount())
+        self.assertEquals(100, self.lastUploadSize())
+        self.top.do.writeLog(createCollectedLog(size=200))
+        self.assertEquals(['report', 'report'], self.observerTime.calledMethodNames())
+        self.assertEquals(['report', 'report'], self.observerCount.calledMethodNames())
+        sleep(0.11)
+        self.top.do.writeLog(createCollectedLog(size=400))
+        self.assertEquals(['report', 'report', 'report'], self.observerTime.calledMethodNames())
+        self.assertEquals(['report', 'report', 'report'], self.observerCount.calledMethodNames())
+        self.assertEquals(3, self.lastUploadsCount())
+        self.assertEquals(400, self.lastUploadSize())
+
+    def lastUploadsCount(self):
+        return self.observerCount.calledMethods[-1].kwargs['values']['gustosGroup']['Upload count']['Uploads'][COUNT]
+    def lastUploadSize(self):
+        return self.observerTime.calledMethods[-1].kwargs['values']['gustosGroup']['Upload size']['size'][MEMORY]
+
+def createCollectedLog(size):
+    collectedLog = exampleUpdateLog()
+    collectedLog['httpRequest']['bodySize'] = [size]
+    return collectedLog
 
 def exampleUpdateLog():
     return {
