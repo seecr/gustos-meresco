@@ -27,7 +27,7 @@ from meresco.components.log.utils import getFirst, getScoped, scopePresent
 from gustos.common.units import MEMORY, TIME
 from gustos.meresco.utils import IntervalCheck
 
-class SruRecordUpdateTimeLogWriter(Observable):
+class HttpRequestUploadLogWriter(Observable):
     def __init__(self, gustosGroup, scopeNames, interval=None, **kwargs):
         Observable.__init__(self, **kwargs)
         if type(scopeNames) is not tuple:

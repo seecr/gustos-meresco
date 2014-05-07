@@ -25,7 +25,7 @@
 from seecr.test import SeecrTestCase, CallTrace
 from weightless.core import be
 from meresco.core import Observable
-from gustos.meresco import SruRecordUpdateCountLogWriter, SruRecordUpdateTimeLogWriter
+from gustos.meresco import SruRecordUpdateCountLogWriter, HttpRequestUploadLogWriter
 from gustos.common.units import TIME, COUNT, MEMORY
 from time import sleep
 
@@ -35,7 +35,7 @@ class SruRecordUpdateLogWriterTest(SeecrTestCase):
         self.observerTime = CallTrace('gustosclient')
         self.observerCount = CallTrace('gustosclient')
         self.top = be((Observable(),
-            (SruRecordUpdateTimeLogWriter(gustosGroup='gustosGroup', scopeNames=('update-scope',)),
+            (HttpRequestUploadLogWriter(gustosGroup='gustosGroup', scopeNames=('update-scope',)),
                 (self.observerTime,)
             ),
             (SruRecordUpdateCountLogWriter(gustosGroup='gustosGroup', scopeNames=('update-scope',), interval=0.1),
