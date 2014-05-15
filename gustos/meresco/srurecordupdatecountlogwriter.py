@@ -37,6 +37,7 @@ class SruRecordUpdateCountLogWriter(Observable):
         self._counts = {
             'sruAdd': 0,
             'sruDelete': 0,
+            'sruInvalid': 0,
         }
         self.setInterval(interval)
 
@@ -51,10 +52,12 @@ class SruRecordUpdateCountLogWriter(Observable):
         sruRecordUpdate = getScoped(collectedLog, scopeNames=self._scopeNames, key='sruRecordUpdate')
         addIdentifier = getFirst(sruRecordUpdate, 'add')
         deleteIdentifier = getFirst(sruRecordUpdate, 'delete')
+        invalidIdentifier = getFirst(sruRecordUpdate, 'invalid')
         if addIdentifier is None and deleteIdentifier is None:
             return
         self._counts['sruAdd'] += (0 if addIdentifier is None else 1)
         self._counts['sruDelete'] += (0 if deleteIdentifier is None else 1)
+        self._counts['sruInvalid'] += (0 if invalidIdentifier is None else 1)
         now, shouldReport = self._interval.check()
         if not shouldReport:
             return
@@ -62,6 +65,7 @@ class SruRecordUpdateCountLogWriter(Observable):
                 'Add': { COUNT: self._counts['sruAdd'] },
                 'Delete': { COUNT: self._counts['sruDelete']},
                 'Uploads': { COUNT: self._counts['sruAdd'] + self._counts['sruDelete'] },
+                'Invalid': { COUNT: self._counts['sruInvalid']},
             }
         self.do.report(values={self._gustosGroup: gustosReport})
         self._interval.done(now)

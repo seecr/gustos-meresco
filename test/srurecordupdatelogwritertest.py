@@ -65,6 +65,7 @@ class SruRecordUpdateLogWriterTest(SeecrTestCase):
                     'Uploads': { COUNT: 1 },
                     'Add': { COUNT: 1 },
                     'Delete': { COUNT: 0},
+                    'Invalid': { COUNT: 0},
                 },
             }
         }, self.observerCount.calledMethods[-1].kwargs['values'])
