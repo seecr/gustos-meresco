@@ -1,5 +1,5 @@
-gustos1.1-common (<< 1.2)
-gustos1.1-common (>= 1.1.19)
+gustos1.2-common (<< 1.3)
+gustos1.2-common (>= 1.2)
 python-meresco-components (<< 4.11)
 python-meresco-components (>= 4.9.21)
 python-meresco-core (<< 4.1)
