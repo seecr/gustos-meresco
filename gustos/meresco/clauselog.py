@@ -3,6 +3,7 @@
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
 # Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2014 Stichting Kennisnet http://www.kennisnet.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -22,8 +23,17 @@
 #
 ## end license ##
 
-from httprequestuploadlogwriter import HttpRequestUploadLogWriter
-from srurecordupdatecountlogwriter import SruRecordUpdateCountLogWriter
-from clauselog import ClauseLog
-from gustosquerycountlogwriter import GustosQueryCountLogWriter
-from gustosquerylogwriter import GustosQueryLogWriter
+from meresco.core import Transparent
+from meresco.components.clausecollector import ClauseCollector
+from meresco.components.log import collectLog
+
+class ClauseLog(Transparent):
+    def executeQuery(self, cqlAbstractSyntaxTree, **kwargs):
+        clauses = [0]
+        def log(clause):
+            clauses[0] += 1
+        ClauseCollector(cqlAbstractSyntaxTree, logger=log).visit()
+        collectLog(dict(cqlClauses=clauses[0]))
+        response = yield self.any.executeQuery(cqlAbstractSyntaxTree=cqlAbstractSyntaxTree, **kwargs)
+        raise StopIteration(response)
+

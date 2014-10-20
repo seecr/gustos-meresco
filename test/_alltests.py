@@ -40,6 +40,9 @@ from warnings import simplefilter
 simplefilter('default')
 
 from srurecordupdatelogwritertest import SruRecordUpdateLogWriterTest
+from clauselogtest import ClauseLogTest
+from gustosquerylogwritertest import GustosQueryLogWriterTest
+
 
 if __name__ == '__main__':
     unittest.main()
