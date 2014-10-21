@@ -23,14 +23,19 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ## end license ##
+from gustos.common.units import COUNT
+from gustos.meresco.report import Report
 
-from httprequestuploadlogwriter import HttpRequestUploadLogWriter
-from srurecordupdatecountlogwriter import SruRecordUpdateCountLogWriter
-from clauselog import ClauseLog
-from timedlogwriter import TimedLogWriter
-from sruquerycountreport import SruQueryCountReport
-from sruresponsetimesreport import SruResponseTimesReport
-from responsesizereport import ResponseSizeReport
-from clausescountreport import ClausesCountReport
-from responsetimereport import ResponseTimeReport
-from countreport import CountReport
+class CountReport(Report):
+    def __init__(self, curveName='total', subgroupName='Counts', **kwargs):
+        super(CountReport, self).__init__(**kwargs)
+        self._curveName = curveName
+        self._subgroupName = subgroupName
+        self._counts = 0
+
+    def analyseLog(self, collectedLog):
+        self._counts += 1
+
+    def fillReport(self, groups, collectedLog):
+        queriesCount = groups.setdefault(self._gustosGroup, {}).setdefault(self._subgroupName, {})
+        queriesCount[self._curveName] = {COUNT: self._counts }

@@ -23,14 +23,18 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ## end license ##
+from gustos.meresco.report import Report
+from meresco.components.log.utils import getFirst
+from gustos.common.units import TIME
 
-from httprequestuploadlogwriter import HttpRequestUploadLogWriter
-from srurecordupdatecountlogwriter import SruRecordUpdateCountLogWriter
-from clauselog import ClauseLog
-from timedlogwriter import TimedLogWriter
-from sruquerycountreport import SruQueryCountReport
-from sruresponsetimesreport import SruResponseTimesReport
-from responsesizereport import ResponseSizeReport
-from clausescountreport import ClausesCountReport
-from responsetimereport import ResponseTimeReport
-from countreport import CountReport
+class ResponseTimeReport(Report):
+    def __init__(self, curveName='total', subgroupName='ResponseTime', **kwargs):
+        super(ResponseTimeReport, self).__init__(**kwargs)
+        self._curveName = curveName
+        self._subgroupName = subgroupName
+
+    def fillReport(self, groups, collectedLog):
+        gustosReport = groups.setdefault(self._gustosGroup, {})
+        responseTime = getFirst(self._getScoped(collectedLog, key='httpResponse'), 'duration', None)
+        if responseTime is not None:
+            gustosReport[self._subgroupName] = {self._curveName: {TIME: float(responseTime)}}

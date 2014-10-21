@@ -29,9 +29,12 @@ from meresco.components.log.utils import getFirst
 from gustos.common.units import MEMORY
 
 class ResponseSizeReport(Report):
+    def __init__(self, subgroupName='Query result size', **kwargs):
+        super(ResponseSizeReport, self).__init__(**kwargs)
+        self._subgroupName = subgroupName
 
     def fillReport(self, groups, collectedLog):
         gustosReport = groups.setdefault(self._gustosGroup, {})
         responseSize = getFirst(self._getScoped(collectedLog, key='httpResponse'), 'size', 0)
         if responseSize:
-            gustosReport['Query result size'] = {'size': {MEMORY: responseSize}}
+            gustosReport[self._subgroupName] = {'size': {MEMORY: responseSize}}
