@@ -28,6 +28,18 @@ from collections import defaultdict
 from meresco.components.log.utils import getFirst
 from gustos.common.units import COUNT
 
+import re
+userAgentRe = re.compile("\S+ \((?P<usefull>[^)]*)\)\S*")
+def extractUserAgentString(userAgentString):
+    match = userAgentRe.match(userAgentString if userAgentString else '')
+    if not match:
+        return None
+    usefull = match.groupdict()['usefull']
+    if not ';' in usefull:
+        return None
+    secondPart = usefull.split(';')[1].strip()
+    return secondPart if len(secondPart) > 0 else None
+
 class AgentCountReport(Report):
     def __init__(self, **kwargs):
         super(AgentCountReport, self).__init__(**kwargs)
@@ -36,7 +48,7 @@ class AgentCountReport(Report):
     def analyseLog(self, collectedLog):
         httpRequest = self._getScoped(collectedLog, key='httpRequest')
         headers = getFirst(httpRequest, 'Headers', {})
-        userAgent = headers.get('User-Agent', None)
+        userAgent = extractUserAgentString(headers.get('User-Agent', None))
         self._counts[userAgent] += 1
 
     def fillReport(self, groups, collectedLog):

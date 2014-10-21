@@ -45,6 +45,7 @@ from srurecordupdatelogwritertest import SruRecordUpdateLogWriterTest
 from clauselogtest import ClauseLogTest
 from timedlogwriterintegrationtest import TimedLogWriterIntegrationTest
 from timedlogwritertest import TimedLogWriterTest
+from agentcountreporttest import AgentCountReportTest
 
 
 if __name__ == '__main__':
