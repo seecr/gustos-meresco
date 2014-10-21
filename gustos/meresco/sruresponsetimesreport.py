@@ -2,8 +2,9 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
+# Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
+# Copyright (C) 2014 SURF http://www.surf.nl
 # Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
-# Copyright (C) 2014 Stichting Kennisnet http://www.kennisnet.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -22,32 +23,15 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ## end license ##
-
-from meresco.core import Observable
-from gustos.common.units import TIME, COUNT, MEMORY
-from meresco.components.log.utils import getFirst, getScoped, scopePresent
-from gustos.meresco.utils import IntervalCheck
+from report import Report
+from meresco.components.log.utils import getFirst
 from urllib import urlencode
+from gustos.common.units import COUNT, TIME
 
-class GustosQueryLogWriter(Observable):
-    def __init__(self, gustosGroup, scopeNames, interval=None, **kwargs):
-        Observable.__init__(self, **kwargs)
-        if type(scopeNames) is not tuple:
-            raise ValueError('Expected tuple')
-        self._gustosGroup = gustosGroup
-        self._scopeNames = scopeNames
-        self._interval = IntervalCheck(interval)
-
-    def writeLog(self, collectedLog):
-        if not scopePresent(collectedLog, self._scopeNames):
-            return
-        gustosReport = {}
-
-        now, shouldReport = self._interval.check()
-        if not shouldReport:
-            return
-
-        sru = getScoped(collectedLog, scopeNames=self._scopeNames, key='sru')
+class SruResponseTimesReport(Report):
+    def fillReport(self, groups, collectedLog):
+        gustosReport = groups.setdefault(self._gustosGroup, {})
+        sru = self._getScoped(collectedLog, key='sru')
         sruArguments = getFirst(sru, 'arguments', {})
         queryLength = len(urlencode(sruArguments))
         if queryLength:
@@ -60,19 +44,6 @@ class GustosQueryLogWriter(Observable):
                 responseTimeData[gustosKey] = {TIME: float(value)}
         if responseTimeData:
             gustosReport['ResponseTime'] = responseTimeData
-
-        clauses = getScoped(collectedLog, scopeNames=self._scopeNames, key='cqlClauses', default=[None])[0]
-        if not clauses is None:
-            gustosReport['Query clauses'] = {'boolean clauses': {COUNT: clauses}}
-
-        responseSize = getFirst(getScoped(collectedLog, scopeNames=self._scopeNames, key='httpResponse'), 'size', 0)
-        if responseSize:
-            gustosReport['Query result size'] = {'size': {MEMORY: responseSize}}
-
-        if gustosReport:
-            self.do.report(values={self._gustosGroup: gustosReport})
-            self._interval.done(now)
-
 
 RESPONSE_TIMEKEYS = [
     ('handlingTime', 'sru'),

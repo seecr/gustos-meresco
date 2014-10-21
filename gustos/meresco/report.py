@@ -23,22 +23,26 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ## end license ##
+from meresco.components.log.utils import scopePresent, getScoped
 
-from time import time
+class Report(object):
+    def __init__(self, gustosGroup, scopeNames):
+        if type(scopeNames) is not tuple:
+            raise ValueError('Expected tuple')
+        self._gustosGroup = gustosGroup
+        self._scopeNames = scopeNames
 
-class IntervalCheck(object):
-    def __init__(self, interval):
-        self._interval = interval
-        self._timeLastReportSent = 0
-        self.check = self._check
-        self.done = self._done
-        if self._interval is None:
-            self.check = lambda: (0, True)
-            self.done = lambda now: None
+        self._wrapMethod('analyseLog')
+        self._wrapMethod('fillReport')
 
-    def _check(self):
-        now = time()
-        return now, now - self._timeLastReportSent > self._interval
+    def _getScoped(self, collectedLog, *args, **kwargs):
+        return getScoped(collectedLog, scopeNames=self._scopeNames, *args, **kwargs)
 
-    def _done(self, aTime):
-        self._timeLastReportSent = aTime
+    def _wrapMethod(self, methodName):
+        method = getattr(self, methodName, None)
+        if method is None:
+            return
+        def wrap(collectedLog, **kwargs):
+            if scopePresent(collectedLog, self._scopeNames):
+                return method(collectedLog=collectedLog, **kwargs)
+        setattr(self, methodName, wrap)

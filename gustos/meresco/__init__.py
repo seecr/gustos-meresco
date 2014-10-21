@@ -2,6 +2,8 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
+# Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
+# Copyright (C) 2014 SURF http://www.surf.nl
 # Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
 #
 # This file is part of "Gustos-Meresco"
@@ -25,5 +27,8 @@
 from httprequestuploadlogwriter import HttpRequestUploadLogWriter
 from srurecordupdatecountlogwriter import SruRecordUpdateCountLogWriter
 from clauselog import ClauseLog
-from gustosquerycountlogwriter import GustosQueryCountLogWriter
-from gustosquerylogwriter import GustosQueryLogWriter
+from timedlogwriter import TimedLogWriter
+from sruquerycountreport import SruQueryCountReport
+from sruresponsetimesreport import SruResponseTimesReport
+from responsesizereport import ResponseSizeReport
+from clausescountreport import ClausesCountReport

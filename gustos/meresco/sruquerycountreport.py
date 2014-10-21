@@ -23,22 +23,23 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ## end license ##
+from meresco.components.log.utils import getFirst
+from gustos.common.units import COUNT
+from gustos.meresco.report import Report
 
-from time import time
+class SruQueryCountReport(Report):
+    def __init__(self, **kwargs):
+        super(SruQueryCountReport, self).__init__(**kwargs)
+        self._counts ={
+            'queries': 0,
+        }
 
-class IntervalCheck(object):
-    def __init__(self, interval):
-        self._interval = interval
-        self._timeLastReportSent = 0
-        self.check = self._check
-        self.done = self._done
-        if self._interval is None:
-            self.check = lambda: (0, True)
-            self.done = lambda now: None
+    def analyseLog(self, collectedLog):
+        sru = self._getScoped(collectedLog, key='sru')
+        sruArguments = getFirst(sru, 'arguments', {})
+        if sruArguments:
+            self._counts['queries'] += 1
 
-    def _check(self):
-        now = time()
-        return now, now - self._timeLastReportSent > self._interval
-
-    def _done(self, aTime):
-        self._timeLastReportSent = aTime
+    def fillReport(self, groups, collectedLog):
+        queriesCount = groups.setdefault(self._gustosGroup, {}).setdefault('Queries count', {})
+        queriesCount['Queries'] = {COUNT: self._counts['queries'] }

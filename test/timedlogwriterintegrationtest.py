@@ -2,6 +2,8 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
+# Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
+# Copyright (C) 2014 SURF http://www.surf.nl
 # Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
 # Copyright (C) 2014 Stichting Kennisnet http://www.kennisnet.nl
 #
@@ -26,34 +28,40 @@
 from seecr.test import SeecrTestCase, CallTrace
 from weightless.core import be
 from meresco.core import Observable
-from gustos.meresco import GustosQueryCountLogWriter, GustosQueryLogWriter
+from gustos.meresco import TimedLogWriter, SruQueryCountReport, SruResponseTimesReport, ResponseSizeReport, ClausesCountReport
 from decimal import Decimal
 from gustos.common.units import TIME, COUNT, MEMORY
-from time import sleep
 
-class GustosQueryLogWriterTest(SeecrTestCase):
+class TimedLogWriterIntegrationTest(SeecrTestCase):
+    maxDiff = None
+
     def setUp(self):
         SeecrTestCase.setUp(self)
-        self.timeObserver = CallTrace('gustosclient time')
-        self.countObserver = CallTrace('gustosclient count')
+        self.timeObserver = CallTrace('gustosclient time', returnValues={'report': None}, onlySpecifiedMethods=True)
+        self.countObserver = CallTrace('gustosclient count', returnValues={'report': None}, onlySpecifiedMethods=True)
+        self.silentObserver = CallTrace('gustosclient silent', returnValues={'report': None}, onlySpecifiedMethods=True)
         self.top = be((Observable(),
-            (GustosQueryLogWriter(gustosGroup='gustosGroup', scopeNames=('query-scope', 'sub-scope'), interval=None),
-                (self.timeObserver,)
+            (TimedLogWriter(interval=None),
+                (SruResponseTimesReport(gustosGroup='gustosGroup', scopeNames=('query-scope', 'sub-scope')),),
+                (ResponseSizeReport(gustosGroup='gustosGroup', scopeNames=('query-scope', 'sub-scope')),),
+                (ClausesCountReport(gustosGroup='gustosGroup', scopeNames=('query-scope', 'sub-scope')),),
+                (self.timeObserver,),
             ),
-            (GustosQueryCountLogWriter(gustosGroup='gustosGroup', scopeNames=('query-scope', 'sub-scope'), interval=0.1),
-                (self.countObserver,)
-            )
+            (TimedLogWriter(interval=0.1),
+                (SruQueryCountReport(gustosGroup='gustosGroup', scopeNames=('query-scope', 'sub-scope')),),
+                (self.countObserver,),
+            ),
+            (TimedLogWriter(interval=None),
+                (SruQueryCountReport(gustosGroup='gustosGroup', scopeNames=('non-existing-scope',)),),
+                (self.silentObserver,),
+            ),
         ))
 
     def testIndexSruQuery(self):
-        def fillReport(gustosReport):
-            gustosReport['additional'] = 'reported'
-        self.countObserver.methods['fillReport'] = fillReport
         logItems = exampleSruLogItems()
         self.top.do.writeLog(collectedLog=logItems)
+        self.assertEquals(['report'], self.countObserver.calledMethodNames())
         self.assertEquals(['report'], self.timeObserver.calledMethodNames())
-        self.assertEquals(['analyseLog', 'fillReport', 'report'], self.countObserver.calledMethodNames())
-        self.maxDiff = None
         self.assertEquals({
             'gustosGroup': {
                 'ResponseTime': {
@@ -78,7 +86,7 @@ class GustosQueryLogWriterTest(SeecrTestCase):
                 },
             }
         }, self.timeObserver.calledMethods[0].kwargs['values'])
-        analyseLogMethod, fillReportMethod, reportMethod = self.countObserver.calledMethods
+        reportMethod = self.countObserver.calledMethods[0]
         self.assertEquals({
             'gustosGroup': {
                 'Queries count': {
@@ -86,17 +94,13 @@ class GustosQueryLogWriterTest(SeecrTestCase):
                         COUNT: 1
                     },
                 },
-                'additional': 'reported'
             },
         }, reportMethod.kwargs['values'])
-        self.assertEquals(reportMethod.kwargs['values']['gustosGroup'], fillReportMethod.kwargs['gustosReport'])
-        self.assertEquals(set(['collectedLog', 'scopeNames']), set(analyseLogMethod.kwargs.keys()))
-        self.assertEquals(('query-scope', 'sub-scope'), analyseLogMethod.kwargs['scopeNames'])
 
     def testEmptyQuery(self):
         collectedLog = exampleSruEmptyLogItems()
         self.top.do.writeLog(collectedLog)
-        self.assertEquals(['analyseLog', 'fillReport', 'report'], self.countObserver.calledMethodNames())
+        self.assertEquals(['report'], self.countObserver.calledMethodNames())
         gustosReport = self.countObserver.calledMethods[-1].kwargs['values']
         self.assertEquals({
                     'Queries': {
@@ -111,29 +115,10 @@ class GustosQueryLogWriterTest(SeecrTestCase):
         self.assertEquals([], self.timeObserver.calledMethodNames())
         self.assertEquals([], self.countObserver.calledMethodNames())
 
-    def testReportAfterInterval(self):
-        def lastQueriesCount():
-            return self.countObserver.calledMethods[-1].kwargs['values']['gustosGroup']['Queries count']['Queries'][COUNT]
-        def lastIndexTime():
-            return self.timeObserver.calledMethods[-1].kwargs['values']['gustosGroup']['ResponseTime']['index'][TIME]
-        def logItems(indexTime):
-            result = exampleSruLogItems()
-            result['query-scope']['sub-scope']['sru']['indexTime'] = [Decimal(indexTime)]
-            return result
-        self.top.do.writeLog(collectedLog=logItems(indexTime='0.010'))
-        self.assertEquals(['report'], self.timeObserver.calledMethodNames())
-        self.assertEquals(['analyseLog', 'fillReport', 'report'], self.countObserver.calledMethodNames())
-        self.assertAlmostEqual(0.010, lastIndexTime())
-        self.assertEquals(1, lastQueriesCount())
-        self.top.do.writeLog(collectedLog=logItems(indexTime='0.020'))
-        self.assertEquals(['analyseLog', 'fillReport', 'report', 'analyseLog'], self.countObserver.calledMethodNames())
-        self.assertEquals(['report', 'report'], self.timeObserver.calledMethodNames())
-        sleep(0.11)
-        self.top.do.writeLog(collectedLog=logItems(indexTime='0.040'))
-        self.assertEquals(['analyseLog', 'fillReport', 'report', 'analyseLog', 'analyseLog', 'fillReport', 'report'], self.countObserver.calledMethodNames())
-        self.assertEquals(['report', 'report', 'report'], self.timeObserver.calledMethodNames())
-        self.assertAlmostEqual(0.040, lastIndexTime())
-        self.assertEquals(3, lastQueriesCount())
+    def testNoScopeNoCall(self):
+        logItems = exampleSruLogItems()
+        self.top.do.writeLog(collectedLog=logItems)
+        self.assertEquals([], self.silentObserver.calledMethodNames())
 
 
 def exampleSruLogItems():

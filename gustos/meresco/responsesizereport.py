@@ -24,21 +24,14 @@
 #
 ## end license ##
 
-from time import time
+from gustos.meresco.report import Report
+from meresco.components.log.utils import getFirst
+from gustos.common.units import MEMORY
 
-class IntervalCheck(object):
-    def __init__(self, interval):
-        self._interval = interval
-        self._timeLastReportSent = 0
-        self.check = self._check
-        self.done = self._done
-        if self._interval is None:
-            self.check = lambda: (0, True)
-            self.done = lambda now: None
+class ResponseSizeReport(Report):
 
-    def _check(self):
-        now = time()
-        return now, now - self._timeLastReportSent > self._interval
-
-    def _done(self, aTime):
-        self._timeLastReportSent = aTime
+    def fillReport(self, groups, collectedLog):
+        gustosReport = groups.setdefault(self._gustosGroup, {})
+        responseSize = getFirst(self._getScoped(collectedLog, key='httpResponse'), 'size', 0)
+        if responseSize:
+            gustosReport['Query result size'] = {'size': {MEMORY: responseSize}}
