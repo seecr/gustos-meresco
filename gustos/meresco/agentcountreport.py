@@ -23,15 +23,23 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ## end license ##
+from gustos.meresco.report import Report
+from collections import defaultdict
+from meresco.components.log.utils import getFirst
+from gustos.common.units import COUNT
 
-from httprequestuploadlogwriter import HttpRequestUploadLogWriter
-from srurecordupdatecountlogwriter import SruRecordUpdateCountLogWriter
-from clauselog import ClauseLog
-from timedlogwriter import TimedLogWriter
-from sruquerycountreport import SruQueryCountReport
-from sruresponsetimesreport import SruResponseTimesReport
-from responsesizereport import ResponseSizeReport
-from clausescountreport import ClausesCountReport
-from responsetimereport import ResponseTimeReport
-from countreport import CountReport
-from agentcountreport import AgentCountReport
+class AgentCountReport(Report):
+    def __init__(self, **kwargs):
+        super(AgentCountReport, self).__init__(**kwargs)
+        self._counts = defaultdict(int)
+
+    def analyseLog(self, collectedLog):
+        httpRequest = self._getScoped(collectedLog, key='httpRequest')
+        headers = getFirst(httpRequest, 'Headers', {})
+        userAgent = headers.get('User-Agent', None)
+        self._counts[userAgent] += 1
+
+    def fillReport(self, groups, collectedLog):
+        queriesCount = groups.setdefault(self._gustosGroup, {}).setdefault('User agents', {})
+        for userAgent, count in self._counts.items():
+            queriesCount[userAgent] = {COUNT: count }
