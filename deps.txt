@@ -1,6 +1,6 @@
 gustos1.2-common (<< 1.3)
 gustos1.2-common (>= 1.2)
 python-meresco-components (<< 4.11)
-python-meresco-components (>= 4.9.21)
+python-meresco-components (>= 4.10.9.1)
 python-meresco-core (<< 4.1)
 python-meresco-core (>= 4.0.4.2)
