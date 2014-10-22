@@ -38,7 +38,7 @@ class SruRecordUpdateCountReport(Report):
         }
 
     def analyseLog(self, collectedLog):
-        sruRecordUpdate = getScoped(collectedLog, scopeNames=self._scopeNames, key='sruRecordUpdate')
+        sruRecordUpdate = self._getScoped(collectedLog, key='sruRecordUpdate')
         addIdentifier = getFirst(sruRecordUpdate, 'add')
         deleteIdentifier = getFirst(sruRecordUpdate, 'delete')
         invalidIdentifier = getFirst(sruRecordUpdate, 'invalid')
