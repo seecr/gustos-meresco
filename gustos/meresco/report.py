@@ -46,3 +46,9 @@ class Report(object):
             if scopePresent(collectedLog, self._scopeNames):
                 return method(collectedLog=collectedLog, **kwargs)
         setattr(self, methodName, wrap)
+
+    def groupReport(self, groups):
+        return groups.setdefault(self._gustosGroup, {})
+
+    def subgroupReport(self, groups, subgroupName):
+        return self.groupReport(groups).setdefault(subgroupName, {})

@@ -53,6 +53,6 @@ class AgentCountReport(Report):
         self._counts[userAgent] += 1
 
     def fillReport(self, groups, collectedLog):
-        queriesCount = groups.setdefault(self._gustosGroup, {}).setdefault('User agents', {})
+        queriesCount = self.subgroupReport(groups, 'User agents')
         for userAgent, count in self._counts.items():
             queriesCount[userAgent] = {COUNT: count }

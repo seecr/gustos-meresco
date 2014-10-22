@@ -30,8 +30,7 @@ from gustos.meresco.report import Report
 class ClausesCountReport(Report):
 
     def fillReport(self, groups, collectedLog):
-        gustosReport = groups.setdefault(self._gustosGroup, {})
         clauses = self._getScoped(collectedLog, key='cqlClauses', default=[None])[0]
         if not clauses is None:
-            gustosReport['Query clauses'] = {'boolean clauses': {COUNT: clauses}}
+            self.subgroupReport(groups, 'Query clauses')['boolean clauses'] = {COUNT: clauses}
 

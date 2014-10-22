@@ -34,7 +34,6 @@ class ResponseSizeReport(Report):
         self._subgroupName = subgroupName
 
     def fillReport(self, groups, collectedLog):
-        gustosReport = groups.setdefault(self._gustosGroup, {})
         responseSize = getFirst(self._getScoped(collectedLog, key='httpResponse'), 'size', 0)
         if responseSize:
-            gustosReport[self._subgroupName] = {'size': {MEMORY: responseSize}}
+            self.subgroupReport(groups, self._subgroupName)['size'] = {MEMORY: responseSize}

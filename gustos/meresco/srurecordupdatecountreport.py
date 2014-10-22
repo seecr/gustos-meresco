@@ -2,6 +2,8 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
+# Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
+# Copyright (C) 2014 SURF http://www.surf.nl
 # Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
 #
 # This file is part of "Gustos-Meresco"
@@ -22,33 +24,20 @@
 #
 ## end license ##
 
-from meresco.core import Observable
-from meresco.components.log.utils import getFirst, getScoped, scopePresent
+from meresco.components.log.utils import getFirst, getScoped
 from gustos.common.units import COUNT
-from gustos.meresco.utils import IntervalCheck
+from gustos.meresco.report import Report
 
-class SruRecordUpdateCountLogWriter(Observable):
-    def __init__(self, gustosGroup, scopeNames, interval=1.0, **kwargs):
-        Observable.__init__(self, **kwargs)
-        if type(scopeNames) is not tuple:
-            raise ValueError('Expected tuple')
-        self._gustosGroup = gustosGroup
-        self._scopeNames = scopeNames
+class SruRecordUpdateCountReport(Report):
+    def __init__(self, **kwargs):
+        super(SruRecordUpdateCountReport, self).__init__(**kwargs)
         self._counts = {
             'sruAdd': 0,
             'sruDelete': 0,
             'sruInvalid': 0,
         }
-        self.setInterval(interval)
 
-    def setInterval(self, interval):
-        self._interval = IntervalCheck(interval)
-
-    def writeLog(self, collectedLog):
-        if not scopePresent(collectedLog, self._scopeNames):
-            return
-        gustosReport = {}
-
+    def analyseLog(self, collectedLog):
         sruRecordUpdate = getScoped(collectedLog, scopeNames=self._scopeNames, key='sruRecordUpdate')
         addIdentifier = getFirst(sruRecordUpdate, 'add')
         deleteIdentifier = getFirst(sruRecordUpdate, 'delete')
@@ -58,14 +47,12 @@ class SruRecordUpdateCountLogWriter(Observable):
         self._counts['sruAdd'] += (0 if addIdentifier is None else 1)
         self._counts['sruDelete'] += (0 if deleteIdentifier is None else 1)
         self._counts['sruInvalid'] += (0 if invalidIdentifier is None else 1)
-        now, shouldReport = self._interval.check()
-        if not shouldReport:
-            return
-        gustosReport['Upload count'] = {
+
+    def fillReport(self, groups, collectedLog):
+        groupReport = self.groupReport(groups)
+        groupReport['Upload count'] = {
                 'Add': { COUNT: self._counts['sruAdd'] },
                 'Delete': { COUNT: self._counts['sruDelete']},
                 'Uploads': { COUNT: self._counts['sruAdd'] + self._counts['sruDelete'] },
                 'Invalid': { COUNT: self._counts['sruInvalid']},
             }
-        self.do.report(values={self._gustosGroup: gustosReport})
-        self._interval.done(now)

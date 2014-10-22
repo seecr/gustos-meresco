@@ -30,7 +30,7 @@ from gustos.common.units import COUNT, TIME
 
 class SruResponseTimesReport(Report):
     def fillReport(self, groups, collectedLog):
-        gustosReport = groups.setdefault(self._gustosGroup, {})
+        gustosReport = self.groupReport(groups)
         sru = self._getScoped(collectedLog, key='sru')
         sruArguments = getFirst(sru, 'arguments', {})
         queryLength = len(urlencode(sruArguments))

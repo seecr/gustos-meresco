@@ -37,5 +37,4 @@ class CountReport(Report):
         self._counts += 1
 
     def fillReport(self, groups, collectedLog):
-        queriesCount = groups.setdefault(self._gustosGroup, {}).setdefault(self._subgroupName, {})
-        queriesCount[self._curveName] = {COUNT: self._counts }
+        self.subgroupReport(groups, self._subgroupName)[self._curveName] = {COUNT: self._counts }

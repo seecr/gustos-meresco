@@ -34,7 +34,6 @@ class ResponseTimeReport(Report):
         self._subgroupName = subgroupName
 
     def fillReport(self, groups, collectedLog):
-        gustosReport = groups.setdefault(self._gustosGroup, {})
         responseTime = getFirst(self._getScoped(collectedLog, key='httpResponse'), 'duration', None)
         if responseTime is not None:
-            gustosReport[self._subgroupName] = {self._curveName: {TIME: float(responseTime)}}
+            self.subgroupReport(groups, self._subgroupName)[self._curveName] = {TIME: float(responseTime)}

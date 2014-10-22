@@ -41,5 +41,4 @@ class SruQueryCountReport(Report):
             self._counts['queries'] += 1
 
     def fillReport(self, groups, collectedLog):
-        queriesCount = groups.setdefault(self._gustosGroup, {}).setdefault('Queries count', {})
-        queriesCount['Queries'] = {COUNT: self._counts['queries'] }
+        self.subgroupReport(groups, 'Queries count')['Queries'] = {COUNT: self._counts['queries'] }

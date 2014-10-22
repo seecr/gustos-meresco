@@ -47,6 +47,9 @@ class TimedLogWriter(Observable):
     """
     def __init__(self, interval=1.0, **kwargs):
         super(TimedLogWriter, self).__init__(**kwargs)
+        self.setInterval(interval)
+
+    def setInterval(self, interval):
         self._interval = IntervalCheck(interval)
 
     def writeLog(self, collectedLog):

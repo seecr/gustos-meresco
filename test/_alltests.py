@@ -41,11 +41,12 @@ import unittest
 from warnings import simplefilter
 simplefilter('default')
 
-from srurecordupdatelogwritertest import SruRecordUpdateLogWriterTest
+from srurecordupdatereporttest import SruRecordUpdateReportTest
 from clauselogtest import ClauseLogTest
 from timedlogwriterintegrationtest import TimedLogWriterIntegrationTest
 from timedlogwritertest import TimedLogWriterTest
 from agentcountreporttest import AgentCountReportTest
+from uploadsizereporttest import UploadSizeReportTest
 
 
 if __name__ == '__main__':

@@ -24,14 +24,13 @@
 #
 ## end license ##
 
-from clauselog import ClauseLog
-from timedlogwriter import TimedLogWriter
-from sruquerycountreport import SruQueryCountReport
-from sruresponsetimesreport import SruResponseTimesReport
-from responsesizereport import ResponseSizeReport
-from clausescountreport import ClausesCountReport
-from responsetimereport import ResponseTimeReport
-from countreport import CountReport
-from agentcountreport import AgentCountReport
-from uploadsizereport import UploadSizeReport
-from srurecordupdatecountreport import SruRecordUpdateCountReport
+from meresco.components.log.utils import getFirst, getScoped
+from gustos.common.units import MEMORY
+from gustos.meresco.report import Report
+
+class UploadSizeReport(Report):
+    def fillReport(self, groups, collectedLog):
+        httpRequest = getScoped(collectedLog, scopeNames=self._scopeNames, key='httpRequest')
+        bodySize = getFirst(httpRequest, 'bodySize')
+        if bodySize:
+            self.subgroupReport(groups, 'Upload size')['size'] = {MEMORY: bodySize}
