@@ -35,10 +35,11 @@ def extractUserAgentString(userAgentString):
     if not match:
         return None
     usefull = match.groupdict()['usefull']
-    if not ';' in usefull:
-        return None
-    secondPart = usefull.split(';')[1].strip()
-    return secondPart if len(secondPart) > 0 else None
+    parts = usefull.split(';')
+    if len(parts) == 1:
+        return usefull
+
+    return parts[1].strip() if parts[0].lower() == 'compatible' else parts[0].strip()
 
 class AgentCountReport(Report):
     def __init__(self, **kwargs):

@@ -37,12 +37,16 @@ class AgentCountReportTest(SeecrTestCase):
 
     def testExtractUsefulAgentStringPart(self):
         self.assertEquals("Googlebot/2.1", extractUserAgentString(GOOGLE_BOT))
-        self.assertEquals("Intel Mac OS X 10_10_0", extractUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.27 Safari/537.36"))
+        self.assertEquals("Macintosh", extractUserAgentString("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.27 Safari/537.36"))
+        self.assertEquals('Windows NT 6.1', extractUserAgentString("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:21.0) Gecko/20130331 Firefox/21.0"))
+        self.assertEquals("bingbot/2.0", extractUserAgentString("Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)"))
+        self.assertEquals("MJ12bot/v1.4.5", extractUserAgentString("Mozilla/5.0 (compatible; MJ12bot/v1.4.5; http://www.majestic12.co.uk/bot.php?+)"))
+        self.assertEquals("x86_64-redhat-linux-gnu", extractUserAgentString("curl/7.19.7 (x86_64-redhat-linux-gnu) libcurl/7.19.7 NSS/3.15.3 zlib/1.2.3 libidn/1.18 libssh2/1.4.2"))
 
         self.assertEquals(None, extractUserAgentString(''))
         self.assertEquals(None, extractUserAgentString(None))
-        self.assertEquals(None, extractUserAgentString('something (between) brackets'))
-        self.assertEquals(None, extractUserAgentString('something (between;) brackets'))
+        self.assertEquals("between", extractUserAgentString('something (between) brackets'))
+        self.assertEquals("between", extractUserAgentString('something (between;) brackets'))
 
     def testAnalyseLog(self):
         observer = CallTrace()
