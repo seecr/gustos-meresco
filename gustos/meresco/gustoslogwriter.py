@@ -27,7 +27,7 @@
 from meresco.core import Observable
 from gustos.meresco.utils import IntervalCheck
 
-class TimedLogWriter(Observable):
+class _TimedLogWriter(Observable):
     """The TimedLogWriter will send a gustos after the interval has passed.
 
     writeLog(...) is called by the meresco.components.log.LogCollector.
@@ -46,11 +46,10 @@ class TimedLogWriter(Observable):
     )
     """
     def __init__(self, interval=1.0, **kwargs):
-        super(TimedLogWriter, self).__init__(**kwargs)
-        self.setInterval(interval)
-
-    def setInterval(self, interval):
-        self._interval = IntervalCheck(interval)
+        super(_TimedLogWriter, self).__init__(**kwargs)
+        self._interval = IntervalCheck(None)
+        if interval is not None:
+            self.setInterval(interval)
 
     def writeLog(self, collectedLog):
         groups = {}
@@ -66,3 +65,21 @@ class TimedLogWriter(Observable):
         if groups:
             self.do.report(values=groups)
             self._interval.done(now)
+
+class GustosLogWriter(_TimedLogWriter):
+    def __init__(self, **kwargs):
+        if 'interval' in kwargs:
+            raise TypeError("interval cannot be set for GustosLogWriter")
+        super(GustosLogWriter, self).__init__(interval=None, **kwargs)
+
+class GustosTimedLogWriter(_TimedLogWriter):
+    def __init__(self, interval, **kwargs):
+        if interval <= 0.0:
+            raise TypeError("Interval should be > 0.0, or use the GustosLogWriter.")
+        super(GustosTimedLogWriter, self).__init__(interval=interval, **kwargs)
+
+    def setInterval(self, interval):
+        if interval <= 0.0:
+            raise ValueError('Expected interval to be > 0.0')
+        self._interval = IntervalCheck(interval)
+

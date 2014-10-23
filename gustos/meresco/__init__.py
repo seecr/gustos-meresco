@@ -25,7 +25,7 @@
 ## end license ##
 
 from clauselog import ClauseLog
-from timedlogwriter import TimedLogWriter
+from gustoslogwriter import GustosTimedLogWriter, GustosLogWriter
 from sruquerycountreport import SruQueryCountReport
 from sruresponsetimesreport import SruResponseTimesReport
 from responsesizereport import ResponseSizeReport

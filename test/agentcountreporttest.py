@@ -2,6 +2,8 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
+# Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
+# Copyright (C) 2014 SURF http://www.surf.nl
 # Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
 # Copyright (C) 2014 Stichting Kennisnet http://www.kennisnet.nl
 #
@@ -24,12 +26,12 @@
 ## end license ##
 
 from seecr.test import SeecrTestCase, CallTrace
-from gustos.meresco import AgentCountReport, TimedLogWriter
+from gustos.meresco import AgentCountReport, GustosLogWriter
 from gustos.meresco.agentcountreport import extractUserAgentString
 
 from meresco.components.log import LogCollector, HandleRequestLog, LogCollectorScope
 
-from weightless.core import be, Observable, compose, tostring
+from weightless.core import be, Observable, compose
 
 GOOGLE_BOT = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
 
@@ -56,7 +58,7 @@ class AgentCountReportTest(SeecrTestCase):
         dna = be(
             (Observable(),
                 (LogCollector(),
-                    (TimedLogWriter(interval=None),
+                    (GustosLogWriter(),
                         (AgentCountReport(gustosGroup="Gustos Group", scopeNames=('mock', )), ),
                         (observer, )
                     ),

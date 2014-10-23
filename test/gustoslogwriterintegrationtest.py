@@ -28,11 +28,11 @@
 from seecr.test import SeecrTestCase, CallTrace
 from weightless.core import be
 from meresco.core import Observable
-from gustos.meresco import TimedLogWriter, SruQueryCountReport, SruResponseTimesReport, ResponseSizeReport, ClausesCountReport
+from gustos.meresco import GustosLogWriter, GustosTimedLogWriter, SruQueryCountReport, SruResponseTimesReport, ResponseSizeReport, ClausesCountReport
 from decimal import Decimal
 from gustos.common.units import TIME, COUNT, MEMORY
 
-class TimedLogWriterIntegrationTest(SeecrTestCase):
+class GustosLogWriterIntegrationTest(SeecrTestCase):
     maxDiff = None
 
     def setUp(self):
@@ -41,17 +41,17 @@ class TimedLogWriterIntegrationTest(SeecrTestCase):
         self.countObserver = CallTrace('gustosclient count', returnValues={'report': None}, onlySpecifiedMethods=True)
         self.silentObserver = CallTrace('gustosclient silent', returnValues={'report': None}, onlySpecifiedMethods=True)
         self.top = be((Observable(),
-            (TimedLogWriter(interval=None),
+            (GustosLogWriter(),
                 (SruResponseTimesReport(gustosGroup='gustosGroup', scopeNames=('query-scope', 'sub-scope')),),
                 (ResponseSizeReport(gustosGroup='gustosGroup', scopeNames=('query-scope', 'sub-scope')),),
                 (ClausesCountReport(gustosGroup='gustosGroup', scopeNames=('query-scope', 'sub-scope')),),
                 (self.timeObserver,),
             ),
-            (TimedLogWriter(interval=0.1),
+            (GustosTimedLogWriter(interval=0.1),
                 (SruQueryCountReport(gustosGroup='gustosGroup', scopeNames=('query-scope', 'sub-scope')),),
                 (self.countObserver,),
             ),
-            (TimedLogWriter(interval=None),
+            (GustosLogWriter(),
                 (SruQueryCountReport(gustosGroup='gustosGroup', scopeNames=('non-existing-scope',)),),
                 (self.silentObserver,),
             ),

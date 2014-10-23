@@ -26,17 +26,17 @@
 
 from seecr.test import SeecrTestCase, CallTrace
 
-from gustos.meresco import TimedLogWriter
+from gustos.meresco import GustosTimedLogWriter
 from weightless.core import be
 from meresco.core import Observable
 from time import sleep
 
-class TimedLogWriterTest(SeecrTestCase):
+class GustosTimedLogWriterTest(SeecrTestCase):
     def setUp(self):
-        super(TimedLogWriterTest, self).setUp()
+        super(GustosTimedLogWriterTest, self).setUp()
         self.observer = CallTrace()
         self.top = be((Observable(),
-            (TimedLogWriter(interval=0.1),
+            (GustosTimedLogWriter(interval=0.1),
                 (self.observer,)
             )
         ))

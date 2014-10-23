@@ -43,8 +43,8 @@ simplefilter('default')
 
 from srurecordupdatereporttest import SruRecordUpdateReportTest
 from clauselogtest import ClauseLogTest
-from timedlogwriterintegrationtest import TimedLogWriterIntegrationTest
-from timedlogwritertest import TimedLogWriterTest
+from gustoslogwriterintegrationtest import GustosLogWriterIntegrationTest
+from gustostimedlogwritertest import GustosTimedLogWriterTest
 from agentcountreporttest import AgentCountReportTest
 from uploadsizereporttest import UploadSizeReportTest
 
