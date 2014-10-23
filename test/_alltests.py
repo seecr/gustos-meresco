@@ -47,7 +47,7 @@ from gustoslogwriterintegrationtest import GustosLogWriterIntegrationTest
 from gustostimedlogwritertest import GustosTimedLogWriterTest
 from agentcountreporttest import AgentCountReportTest
 from uploadsizereporttest import UploadSizeReportTest
-
+from gustoscontinuouslogwriterintegrationtest import GustosContinuousLogWriterIntegrationTest
 
 if __name__ == '__main__':
     unittest.main()

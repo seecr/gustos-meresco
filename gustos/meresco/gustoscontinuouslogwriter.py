@@ -24,15 +24,22 @@
 #
 ## end license ##
 
-from clauselog import ClauseLog
-from gustoslogwriter import GustosTimedLogWriter, GustosLogWriter
-from gustoscontinuouslogwriter import GustosContinuousLogWriter
-from sruquerycountreport import SruQueryCountReport
-from sruresponsetimesreport import SruResponseTimesReport
-from responsesizereport import ResponseSizeReport
-from clausescountreport import ClausesCountReport
-from responsetimereport import ResponseTimeReport
-from countreport import CountReport
-from agentcountreport import AgentCountReport
-from uploadsizereport import UploadSizeReport
-from srurecordupdatecountreport import SruRecordUpdateCountReport
+from meresco.core import Observable
+from gustos.meresco.utils import IntervalCheck
+
+class GustosContinuousLogWriter(Observable):
+    def __init__(self, reactor, interval=1.0, **kwargs):
+        super(GustosContinuousLogWriter, self).__init__(**kwargs)
+        self._reactor = reactor
+        self._interval = interval
+        self._values = {}
+        self._reactor.addTimer(self._interval, self.report)
+
+    def writeLog(self, collectedLog):
+        self.do.analyseLog(collectedLog=collectedLog)
+        self.do.fillReport(groups=self._values, collectedLog=collectedLog)
+
+    def report(self):
+        if len(self._values) > 0:
+            self.do.report(values=self._values)
+        self._reactor.addTimer(self._interval, self.report)
