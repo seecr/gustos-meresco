@@ -5,6 +5,7 @@
 # Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
 # Copyright (C) 2014 SURF http://www.surf.nl
 # Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2014 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -23,6 +24,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ## end license ##
+
 from meresco.components.log.utils import scopePresent, getScoped
 
 class Report(object):
@@ -42,9 +44,9 @@ class Report(object):
         method = getattr(self, methodName, None)
         if method is None:
             return
-        def wrap(collectedLog, **kwargs):
-            if scopePresent(collectedLog, self._scopeNames):
-                return method(collectedLog=collectedLog, **kwargs)
+        def wrap(**kwargs):
+            if scopePresent(kwargs['collectedLog'], self._scopeNames):
+                return method(**kwargs)
         setattr(self, methodName, wrap)
 
     def groupReport(self, groups):

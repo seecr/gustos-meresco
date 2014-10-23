@@ -6,6 +6,7 @@
 # Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
 # Copyright (C) 2014 SURF http://www.surf.nl
 # Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2014 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -47,6 +48,7 @@ from gustoslogwriterintegrationtest import GustosLogWriterIntegrationTest
 from gustostimedlogwritertest import GustosTimedLogWriterTest
 from agentcountreporttest import AgentCountReportTest
 from uploadsizereporttest import UploadSizeReportTest
+from reporttest import ReportTest
 from gustoscontinuouslogwriterintegrationtest import GustosContinuousLogWriterIntegrationTest
 
 if __name__ == '__main__':
