@@ -47,8 +47,10 @@ from clauselogtest import ClauseLogTest
 from gustoslogwriterintegrationtest import GustosLogWriterIntegrationTest
 from gustostimedlogwritertest import GustosTimedLogWriterTest
 from agentcountreporttest import AgentCountReportTest
+from responsetimereporttest import ResponseTimeReportTest
 from uploadsizereporttest import UploadSizeReportTest
 from reporttest import ReportTest
+from countreporttest import CountReportTest
 from gustoscontinuouslogwriterintegrationtest import GustosContinuousLogWriterIntegrationTest
 
 if __name__ == '__main__':

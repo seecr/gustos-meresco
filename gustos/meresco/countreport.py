@@ -5,6 +5,7 @@
 # Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
 # Copyright (C) 2014 SURF http://www.surf.nl
 # Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2014 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -23,18 +24,25 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ## end license ##
+
 from gustos.common.units import COUNT
 from gustos.meresco.report import Report
 
 class CountReport(Report):
-    def __init__(self, curveName='total', subgroupName='Counts', **kwargs):
+    def __init__(self, curveName='total', subgroupName='Counts', keys=None, **kwargs):
         super(CountReport, self).__init__(**kwargs)
         self._curveName = curveName
         self._subgroupName = subgroupName
+        if keys is None:
+            keys = None, None
+        self._scopeKey, self._countKey = keys
         self._counts = 0
 
     def analyseLog(self, collectedLog):
-        self._counts += 1
+        if self._scopeKey is None:
+            self._counts += 1
+        else:
+            self._counts += len(self._getScoped(collectedLog, key=self._scopeKey).get(self._countKey, []))
 
     def fillReport(self, groups, collectedLog):
         self.subgroupReport(groups, self._subgroupName)[self._curveName] = {COUNT: self._counts }
