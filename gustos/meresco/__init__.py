@@ -4,7 +4,8 @@
 #
 # Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
 # Copyright (C) 2014 SURF http://www.surf.nl
-# Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2014-2015 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2015 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -36,3 +37,4 @@ from countreport import CountReport
 from agentcountreport import AgentCountReport
 from uploadsizereport import UploadSizeReport
 from srurecordupdatecountreport import SruRecordUpdateCountReport
+from gustosoairecordcount import GustosOaiRecordCount
