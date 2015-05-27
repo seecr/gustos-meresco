@@ -52,7 +52,7 @@ from uploadsizereporttest import UploadSizeReportTest
 from reporttest import ReportTest
 from countreporttest import CountReportTest
 from gustoscontinuouslogwriterintegrationtest import GustosContinuousLogWriterIntegrationTest
-from oairecordcounttest import OaiRecordCountTest
+from gustosoairecordcounttest import GustosOaiRecordCountTest
 
 if __name__ == '__main__':
     unittest.main()

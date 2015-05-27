@@ -27,17 +27,17 @@ from seecr.test import SeecrTestCase, CallTrace
 from weightless.core import be, consume
 from meresco.core import Observable
 from meresco.xml.utils import createElement, createSubElement
-from gustos.meresco.oairecordcount import OaiRecordCount
+from gustos.meresco.gustosoairecordcount import GustosOaiRecordCount
 from gustos.common.units import COUNT
 from time import sleep
 
-class OaiRecordCountTest(SeecrTestCase):
+class GustosOaiRecordCountTest(SeecrTestCase):
 
     def testAll(self):
         client = CallTrace('gustosclient')
         handler = CallTrace('handler', emptyGeneratorMethods=['handle'])
         top = be((Observable(),
-            (OaiRecordCount(type='Summary', interval=0.1),
+            (GustosOaiRecordCount(type='Summary', interval=0.1),
                 (client,)
             ),
             (handler,)

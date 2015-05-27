@@ -28,7 +28,7 @@ from gustos.common.units import COUNT
 from meresco.core import Observable
 from time import time
 
-class OaiRecordCount(Observable):
+class GustosOaiRecordCount(Observable):
     _time = time
 
     def __init__(self, type, interval=1.0, **kwargs):
