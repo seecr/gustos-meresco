@@ -5,8 +5,8 @@
 #
 # Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
 # Copyright (C) 2014 SURF http://www.surf.nl
-# Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
-# Copyright (C) 2014 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
+# Copyright (C) 2014-2015 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2014-2015 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -52,6 +52,7 @@ from uploadsizereporttest import UploadSizeReportTest
 from reporttest import ReportTest
 from countreporttest import CountReportTest
 from gustoscontinuouslogwriterintegrationtest import GustosContinuousLogWriterIntegrationTest
+from oairecordcounttest import OaiRecordCountTest
 
 if __name__ == '__main__':
     unittest.main()
