@@ -4,7 +4,8 @@
 #
 # Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
 # Copyright (C) 2014 SURF http://www.surf.nl
-# Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2014-2015 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2015 Stichting Kennisnet http://www.kennisnet.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -63,7 +64,7 @@ class _TimedLogWriter(Observable):
         self.do.fillReport(groups=groups, collectedLog=collectedLog)
 
         if groups:
-            self.do.report(values=groups)
+            self.call.report(values=groups) # call, because it returns packet data
             self._interval.done(now)
 
 class GustosLogWriter(_TimedLogWriter):

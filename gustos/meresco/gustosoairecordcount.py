@@ -4,6 +4,7 @@
 #
 # Copyright (C) 2014-2015 Seecr (Seek You Too B.V.) http://seecr.nl
 # Copyright (C) 2014-2015 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
+# Copyright (C) 2015 Stichting Kennisnet http://www.kennisnet.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -47,7 +48,7 @@ class GustosOaiRecordCount(Observable):
 
         now = self._time()
         if now - self._lastReportTime > self._interval:
-            self.do.report(values={
+            self.call.report(values={
                 "%s" % self._type: {
                     "Updated records": {
                         "adds": {

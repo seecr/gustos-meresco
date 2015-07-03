@@ -4,6 +4,7 @@
 #
 # Copyright (C) 2014-2015 Seecr (Seek You Too B.V.) http://seecr.nl
 # Copyright (C) 2014-2015 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
+# Copyright (C) 2015 Stichting Kennisnet http://www.kennisnet.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -34,7 +35,7 @@ from time import sleep
 class GustosOaiRecordCountTest(SeecrTestCase):
 
     def testAll(self):
-        client = CallTrace('gustosclient')
+        client = CallTrace('gustosclient', returnValues=dict(report={'packet':'data'}))
         handler = CallTrace('handler', emptyGeneratorMethods=['handle'])
         top = be((Observable(),
             (GustosOaiRecordCount(type='Summary', interval=0.1),

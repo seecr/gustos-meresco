@@ -2,8 +2,9 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
-# Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2014-2015 Seecr (Seek You Too B.V.) http://seecr.nl
 # Copyright (C) 2014 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
+# Copyright (C) 2015 Stichting Kennisnet http://www.kennisnet.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -32,7 +33,7 @@ from decimal import Decimal
 
 class ResponseTimeReportTest(SeecrTestCase):
     def testCountOne(self):
-        self.report = CallTrace(returnValues={'report': None}, onlySpecifiedMethods=True, verbose=True)
+        self.report = CallTrace(returnValues={'report': {"packet":"data"}}, onlySpecifiedMethods=True)
         self.top = be((Observable(),
             (LogCollector(),
                 (GustosLogWriter(),
