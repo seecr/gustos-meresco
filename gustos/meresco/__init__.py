@@ -6,6 +6,7 @@
 # Copyright (C) 2014 SURF http://www.surf.nl
 # Copyright (C) 2014-2015 Seecr (Seek You Too B.V.) http://seecr.nl
 # Copyright (C) 2015 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
+# Copyright (C) 2015 Stichting Kennisnet http://www.kennisnet.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -38,3 +39,6 @@ from agentcountreport import AgentCountReport
 from uploadsizereport import UploadSizeReport
 from srurecordupdatecountreport import SruRecordUpdateCountReport
 from gustosoairecordcount import GustosOaiRecordCount
+from responsetime import ResponseTime
+from querycount import QueryCount
+from updatablegustosclient import UpdatableGustosClient
