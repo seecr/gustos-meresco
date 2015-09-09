@@ -2,8 +2,8 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
-# Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
-# Copyright (C) 2014 Stichting Kennisnet http://www.kennisnet.nl
+# Copyright (C) 2014-2015 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2014-2015 Stichting Kennisnet http://www.kennisnet.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -24,16 +24,15 @@
 ## end license ##
 
 from meresco.core import Transparent
-from meresco.components.clausecollector import ClauseCollector
 from meresco.components.log import collectLog
 
 class ClauseLog(Transparent):
-    def executeQuery(self, cqlAbstractSyntaxTree, **kwargs):
-        clauses = [0]
-        def log(clause):
-            clauses[0] += 1
-        ClauseCollector(cqlAbstractSyntaxTree, logger=log).visit()
-        collectLog(dict(cqlClauses=clauses[0]))
-        response = yield self.any.executeQuery(cqlAbstractSyntaxTree=cqlAbstractSyntaxTree, **kwargs)
+    def executeQuery(self, query, **kwargs):
+        clauses = 0
+        for expr in query.iter():
+            if not expr.operator:
+                clauses += 1
+        collectLog(dict(cqlClauses=clauses))
+        response = yield self.any.executeQuery(query=query, **kwargs)
         raise StopIteration(response)
 

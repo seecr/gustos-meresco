@@ -2,8 +2,8 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
-# Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
-# Copyright (C) 2014 Stichting Kennisnet http://www.kennisnet.nl
+# Copyright (C) 2014-2015 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2014-2015 Stichting Kennisnet http://www.kennisnet.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -28,7 +28,7 @@ from gustos.meresco import ClauseLog
 from weightless.core import be, retval
 from collections import defaultdict
 from meresco.core import Observable
-from cqlparser import parseString
+from cqlparser import cqlToExpression
 
 class ClauseLogTest(SeecrTestCase):
 
@@ -43,7 +43,7 @@ class ClauseLogTest(SeecrTestCase):
                 (observer,)
             )
         ))
-        result = retval(log.any.executeQuery(key='value', cqlAbstractSyntaxTree=parseString(query)))
+        result = retval(log.any.executeQuery(key='value', query=cqlToExpression(query)))
         self.assertEquals('result', result)
 
         return __callstack_var_logCollector__
