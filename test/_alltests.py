@@ -43,6 +43,7 @@ import unittest
 from warnings import simplefilter
 simplefilter('default')
 
+from adminservicesreporttest import AdminServicesReportTest
 from srurecordupdatereporttest import SruRecordUpdateReportTest
 from clauselogtest import ClauseLogTest
 from gustoslogwriterintegrationtest import GustosLogWriterIntegrationTest
