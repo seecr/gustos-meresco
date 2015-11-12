@@ -42,3 +42,4 @@ from gustosoairecordcount import GustosOaiRecordCount
 from responsetime import ResponseTime
 from querycount import QueryCount
 from updatablegustosclient import UpdatableGustosClient
+from jvmmonitortree import jvmMonitorTree
