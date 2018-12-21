@@ -1,4 +1,5 @@
 gustos-common | gustos2.2-common
+gustos-client | gustos2.2-client
 python-meresco-components (>= 4.12)
 python-meresco-components (<< 4.16)
 python-meresco-core (>= 4.0.5.1)
