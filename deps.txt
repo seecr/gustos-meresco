@@ -6,10 +6,9 @@ python-meresco-core (>= 4.0.8)
 python-meresco-core (<< 4.1)
 python-cqlparser (>= 1.7.6)
 python-cqlparser (<< 1.8)
-python-meresco-pylucene (>= 6.5.0)
-python-meresco-pylucene (<< 6.6)
+python-meresco-pylucene
 python-meresco-xml (>= 4.3.2)
 python-meresco-xml (<< 4.4)
 python-simplejson
-python-weightless-core (>= 0.10.13.1)
+python-weightless-core (>= 0.10.13.4)
 python-weightless-core (<< 0.11)
