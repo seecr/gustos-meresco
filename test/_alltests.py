@@ -4,10 +4,12 @@
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
 # Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
-# Copyright (C) 2014 SURF http://www.surf.nl
-# Copyright (C) 2014-2015 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2014, 2021 SURF https://www.surf.nl
+# Copyright (C) 2014-2015, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
 # Copyright (C) 2014-2015 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
-# Copyright (C) 2015 Stichting Kennisnet http://www.kennisnet.nl
+# Copyright (C) 2015, 2021 Stichting Kennisnet https://www.kennisnet.nl
+# Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
+# Copyright (C) 2021 The Netherlands Institute for Sound and Vision https://beeldengeluid.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -30,18 +32,12 @@
 from os import getuid
 assert getuid() != 0, "Do not run tests as 'root'"
 
-from os import system                             #DO_NOT_DISTRIBUTE
-from sys import path as sysPath                   #DO_NOT_DISTRIBUTE
-system('find .. -name "*.pyc" | xargs rm -f')     #DO_NOT_DISTRIBUTE
-                                                  #DO_NOT_DISTRIBUTE
-from glob import glob                             #DO_NOT_DISTRIBUTE
-for path in glob('../deps.d/*'):                  #DO_NOT_DISTRIBUTE
-    sysPath.insert(0, path)                       #DO_NOT_DISTRIBUTE
-sysPath.insert(0,'..')                            #DO_NOT_DISTRIBUTE
+from seecrdeps import includeParentAndDeps       #DO_NOT_DISTRIBUTE
+includeParentAndDeps(__file__)                   #DO_NOT_DISTRIBUTE
 
 import unittest
-from warnings import simplefilter
-simplefilter('default')
+from warnings import simplefilter,filterwarnings
+filterwarnings('ignore', message=r".*has no __module__ attribute.*", category=DeprecationWarning)
 
 from adminservicesreporttest import AdminServicesReportTest
 from srurecordupdatereporttest import SruRecordUpdateReportTest

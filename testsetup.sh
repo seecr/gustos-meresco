@@ -2,7 +2,11 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
-# Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2014, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
+# Copyright (C) 2021 SURF https://www.surf.nl
+# Copyright (C) 2021 Stichting Kennisnet https://www.kennisnet.nl
+# Copyright (C) 2021 The Netherlands Institute for Sound and Vision https://beeldengeluid.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -25,13 +29,13 @@
 set -e
 mydir=$(cd $(dirname $0);pwd)
 
-source /usr/share/seecr-test/functions
+source /usr/share/seecr-tools/functions.d/test
 
 rm -rf tmp build
 
 definePythonVars
 
-$PYTHON setup.py install --root tmp
+${PYTHON} setup.py install --root tmp
 cp -r test tmp/test
 
 removeDoNotDistribute tmp

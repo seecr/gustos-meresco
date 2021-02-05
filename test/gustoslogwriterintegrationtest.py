@@ -3,9 +3,11 @@
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
 # Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
-# Copyright (C) 2014 SURF http://www.surf.nl
-# Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
-# Copyright (C) 2014 Stichting Kennisnet http://www.kennisnet.nl
+# Copyright (C) 2014, 2021 SURF https://www.surf.nl
+# Copyright (C) 2014, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2014, 2021 Stichting Kennisnet https://www.kennisnet.nl
+# Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
+# Copyright (C) 2021 The Netherlands Institute for Sound and Vision https://beeldengeluid.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -60,9 +62,9 @@ class GustosLogWriterIntegrationTest(SeecrTestCase):
     def testIndexSruQuery(self):
         logItems = exampleSruLogItems()
         self.top.do.writeLog(collectedLog=logItems)
-        self.assertEquals(['report'], self.countObserver.calledMethodNames())
-        self.assertEquals(['report'], self.timeObserver.calledMethodNames())
-        self.assertEquals({
+        self.assertEqual(['report'], self.countObserver.calledMethodNames())
+        self.assertEqual(['report'], self.timeObserver.calledMethodNames())
+        self.assertEqual({
             'gustosGroup': {
                 'ResponseTime': {
                     'index': { TIME: 0.1 },
@@ -87,7 +89,7 @@ class GustosLogWriterIntegrationTest(SeecrTestCase):
             }
         }, self.timeObserver.calledMethods[0].kwargs['values'])
         reportMethod = self.countObserver.calledMethods[0]
-        self.assertEquals({
+        self.assertEqual({
             'gustosGroup': {
                 'Queries count': {
                     'Queries': {
@@ -100,9 +102,9 @@ class GustosLogWriterIntegrationTest(SeecrTestCase):
     def testEmptyQuery(self):
         collectedLog = exampleSruEmptyLogItems()
         self.top.do.writeLog(collectedLog)
-        self.assertEquals(['report'], self.countObserver.calledMethodNames())
+        self.assertEqual(['report'], self.countObserver.calledMethodNames())
         gustosReport = self.countObserver.calledMethods[-1].kwargs['values']
-        self.assertEquals({
+        self.assertEqual({
                     'Queries': {
                         COUNT: 0
                     },
@@ -112,13 +114,13 @@ class GustosLogWriterIntegrationTest(SeecrTestCase):
         collectedLog = exampleSruEmptyLogItems()
         del collectedLog['query-scope']['sub-scope']
         self.top.do.writeLog(collectedLog)
-        self.assertEquals([], self.timeObserver.calledMethodNames())
-        self.assertEquals([], self.countObserver.calledMethodNames())
+        self.assertEqual([], self.timeObserver.calledMethodNames())
+        self.assertEqual([], self.countObserver.calledMethodNames())
 
     def testNoScopeNoCall(self):
         logItems = exampleSruLogItems()
         self.top.do.writeLog(collectedLog=logItems)
-        self.assertEquals([], self.silentObserver.calledMethodNames())
+        self.assertEqual([], self.silentObserver.calledMethodNames())
 
 
 def exampleSruLogItems():

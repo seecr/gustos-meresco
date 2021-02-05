@@ -3,8 +3,11 @@
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
 # Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
-# Copyright (C) 2014 SURF http://www.surf.nl
-# Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2014, 2021 SURF https://www.surf.nl
+# Copyright (C) 2014, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
+# Copyright (C) 2021 Stichting Kennisnet https://www.kennisnet.nl
+# Copyright (C) 2021 The Netherlands Institute for Sound and Vision https://beeldengeluid.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -47,12 +50,12 @@ class GustosTimedLogWriterTest(SeecrTestCase):
             groups['fill me'] = 'up'
         self.observer.methods['fillReport'] = fillReport
         self.top.do.writeLog(collectedLog=collectedLog)
-        self.assertEquals(['analyseLog', 'fillReport', 'report'], self.observer.calledMethodNames())
+        self.assertEqual(['analyseLog', 'fillReport', 'report'], self.observer.calledMethodNames())
 
     def testWriteEmptyLog(self):
         collectedLog = {'collected':'log'}
         self.top.do.writeLog(collectedLog=collectedLog)
-        self.assertEquals(['analyseLog', 'fillReport'], self.observer.calledMethodNames())
+        self.assertEqual(['analyseLog', 'fillReport'], self.observer.calledMethodNames())
 
     def testTimedWriting(self):
         collectedLog = {'collected':'log'}
@@ -60,10 +63,10 @@ class GustosTimedLogWriterTest(SeecrTestCase):
             groups['fill me'] = 'up'
         self.observer.methods['fillReport'] = fillReport
         self.top.do.writeLog(collectedLog=collectedLog)
-        self.assertEquals(['analyseLog', 'fillReport', 'report'], self.observer.calledMethodNames())
+        self.assertEqual(['analyseLog', 'fillReport', 'report'], self.observer.calledMethodNames())
         self.top.do.writeLog(collectedLog=collectedLog)
         self.top.do.writeLog(collectedLog=collectedLog)
-        self.assertEquals(['analyseLog', 'fillReport', 'report', 'analyseLog', 'analyseLog'], self.observer.calledMethodNames())
+        self.assertEqual(['analyseLog', 'fillReport', 'report', 'analyseLog', 'analyseLog'], self.observer.calledMethodNames())
         sleep(0.11)
         self.top.do.writeLog(collectedLog=collectedLog)
-        self.assertEquals(['analyseLog', 'fillReport', 'report', 'analyseLog', 'analyseLog', 'analyseLog', 'fillReport', 'report'], self.observer.calledMethodNames())
+        self.assertEqual(['analyseLog', 'fillReport', 'report', 'analyseLog', 'analyseLog', 'analyseLog', 'fillReport', 'report'], self.observer.calledMethodNames())

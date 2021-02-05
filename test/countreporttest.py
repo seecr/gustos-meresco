@@ -2,8 +2,12 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
-# Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2014, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
 # Copyright (C) 2014 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
+# Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
+# Copyright (C) 2021 SURF https://www.surf.nl
+# Copyright (C) 2021 Stichting Kennisnet https://www.kennisnet.nl
+# Copyright (C) 2021 The Netherlands Institute for Sound and Vision https://beeldengeluid.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -43,9 +47,9 @@ class CountReportTest(SeecrTestCase):
             )
         ))
         self.top.do.callMe(times=3)
-        self.assertEquals(['report'], self.report.calledMethodNames())
+        self.assertEqual(['report'], self.report.calledMethodNames())
         countReport = self.report.calledMethods[0].kwargs['values']['gustosGroup']['Counts']
-        self.assertEquals({'collectTimes': {'count': 3}, 'calls': {'count': 1}}, countReport)
+        self.assertEqual({'collectTimes': {'count': 3}, 'calls': {'count': 1}}, countReport)
 
 class CollectMeALog(object):
     def callMe(self, times=1):

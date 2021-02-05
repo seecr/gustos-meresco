@@ -3,9 +3,12 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
-# Copyright (C) 2014-2015 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2014-2015, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
 # Copyright (C) 2014 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
-# Copyright (C) 2015 Stichting Kennisnet http://www.kennisnet.nl
+# Copyright (C) 2015, 2021 Stichting Kennisnet https://www.kennisnet.nl
+# Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
+# Copyright (C) 2021 SURF https://www.surf.nl
+# Copyright (C) 2021 The Netherlands Institute for Sound and Vision https://beeldengeluid.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -47,9 +50,9 @@ class QueryCountTest(SeecrTestCase):
 
     def testReportQueryCount(self):
         self.top.do.handleQueryTimes(index=Decimal("1.000"), sru=Decimal("1.500"), queryTime=Decimal("2.000"))
-        self.assertEquals(['report'], self.observer.calledMethodNames())
+        self.assertEqual(['report'], self.observer.calledMethodNames())
 
-        self.assertEquals({
+        self.assertEqual({
             'TYPE': {
                 'QueryCount': {
                     'Queries': {COUNT: 1}
@@ -62,24 +65,24 @@ class QueryCountTest(SeecrTestCase):
             return self.observer.calledMethods[-1].kwargs['values']['TYPE']['QueryCount']['Queries'][COUNT]
         msg = lambda nr: dict(index=Decimal("%s.000" % nr), sru=Decimal("1.500"), queryTime=Decimal("2.000"))
         self.top.do.handleQueryTimes(**msg(1))
-        self.assertEquals(1, countFromLastMethod())
-        self.assertEquals(['report'] * 1, self.observer.calledMethodNames())
+        self.assertEqual(1, countFromLastMethod())
+        self.assertEqual(['report'] * 1, self.observer.calledMethodNames())
         self.top.do.handleQueryTimes(**msg(2))
         self.top.do.handleQueryTimes(**msg(3))
         self.top.do.handleQueryTimes(**msg(4))
         self.top.do.handleQueryTimes(**msg(5))
-        self.assertEquals(['report'] * 1, self.observer.calledMethodNames())
+        self.assertEqual(['report'] * 1, self.observer.calledMethodNames())
         sleep(0.1)
         self.top.do.handleQueryTimes(**msg(6))
-        self.assertEquals(['report'] * 2, self.observer.calledMethodNames())
-        self.assertEquals(6, countFromLastMethod())
+        self.assertEqual(['report'] * 2, self.observer.calledMethodNames())
+        self.assertEqual(6, countFromLastMethod())
         self.top.do.handleQueryTimes(**msg(7))
         self.top.do.handleQueryTimes(**msg(8))
         self.top.do.handleQueryTimes(**msg(9))
         self.top.do.handleQueryTimes(**msg(10))
-        self.assertEquals(['report'] * 2, self.observer.calledMethodNames())
+        self.assertEqual(['report'] * 2, self.observer.calledMethodNames())
         sleep(0.1)
         self.top.do.handleQueryTimes(**msg(11))
-        self.assertEquals(['report'] * 3, self.observer.calledMethodNames())
-        self.assertEquals(11, countFromLastMethod())
+        self.assertEqual(['report'] * 3, self.observer.calledMethodNames())
+        self.assertEqual(11, countFromLastMethod())
 

@@ -2,10 +2,13 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
-# Copyright (C) 2013-2015 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2013-2015, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
 # Copyright (C) 2013-2014 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
 # Copyright (C) 2015 Koninklijke Bibliotheek (KB) http://www.kb.nl
-# Copyright (C) 2015 Stichting Kennisnet http://www.kennisnet.nl
+# Copyright (C) 2015, 2021 Stichting Kennisnet https://www.kennisnet.nl
+# Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
+# Copyright (C) 2021 SURF https://www.surf.nl
+# Copyright (C) 2021 The Netherlands Institute for Sound and Vision https://beeldengeluid.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -69,15 +72,15 @@ class AdminServicesReportTest(SeecrTestCase):
 
         with stdout_replaced() as out:
             consume(self.dna.all.handle())
-            self.assertEquals('''\
+            self.assertEqual('''\
 AdminServicesReport: Error Services:
     type: typeName, identifier: joe-joe-aiyedee
 AdminServicesReport: Inactive Services:
     type: typeName, identifier: other
 ''', out.getvalue())
 
-        self.assertEquals(['listServices', 'report'], self.client.calledMethodNames())
-        self.assertEquals({'Admin Information':
+        self.assertEqual(['listServices', 'report'], self.client.calledMethodNames())
+        self.assertEqual({'Admin Information':
             {'Services':
                 {'active':
                     {'count': 1},
@@ -106,7 +109,7 @@ AdminServicesReport: Inactive Services:
             }
         }
         consume(self.dna.all.handle())
-        self.assertEquals({'Admin Information':
+        self.assertEqual({'Admin Information':
             {'Services':
                 {'active': {'count': 1}, 'inactive': {'count': 0}}
             ,'Errors':
@@ -115,7 +118,7 @@ AdminServicesReport: Inactive Services:
          }, self.client.calledMethods[-1].kwargs['values'])
 
         consume(self.dna.all.handle())
-        self.assertEquals({'Admin Information':
+        self.assertEqual({'Admin Information':
             {'Services':
                 {'active': {'count': 2}, 'inactive': {'count': 0}}
             ,'Errors':
@@ -137,7 +140,7 @@ AdminServicesReport: Inactive Services:
         }
 
         consume(self.dna.all.handle())
-        self.assertEquals({'Admin Information':
+        self.assertEqual({'Admin Information':
             {'Services':
                 {'active': {'count': 3}, 'inactive': {'count': 0}}
             ,'Errors':

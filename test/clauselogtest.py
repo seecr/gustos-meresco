@@ -2,8 +2,11 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
-# Copyright (C) 2014-2015 Seecr (Seek You Too B.V.) http://seecr.nl
-# Copyright (C) 2014-2015 Stichting Kennisnet http://www.kennisnet.nl
+# Copyright (C) 2014-2015, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2014-2015, 2021 Stichting Kennisnet https://www.kennisnet.nl
+# Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
+# Copyright (C) 2021 SURF https://www.surf.nl
+# Copyright (C) 2021 The Netherlands Institute for Sound and Vision https://beeldengeluid.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -35,7 +38,7 @@ class ClauseLogTest(SeecrTestCase):
     def count(self, query):
         __callstack_var_logCollector__ = defaultdict(list)
         def executeQuery(**kwargs):
-            raise StopIteration('result')
+            return 'result'
             yield
         observer = CallTrace(methods={'executeQuery': executeQuery})
         log = be((Observable(),
@@ -44,12 +47,12 @@ class ClauseLogTest(SeecrTestCase):
             )
         ))
         result = retval(log.any.executeQuery(key='value', query=cqlToExpression(query)))
-        self.assertEquals('result', result)
+        self.assertEqual('result', result)
 
         return __callstack_var_logCollector__
 
     def testSimpleCount(self):
-        self.assertEquals({'cqlClauses': [1]}, self.count('query'))
-        self.assertEquals({'cqlClauses': [2]}, self.count('query AND query'))
-        self.assertEquals({'cqlClauses': [6]}, self.count('query AND (query NOT query) OR (query OR (query AND query))'))
+        self.assertEqual({'cqlClauses': [1]}, self.count('query'))
+        self.assertEqual({'cqlClauses': [2]}, self.count('query AND query'))
+        self.assertEqual({'cqlClauses': [6]}, self.count('query AND (query NOT query) OR (query OR (query AND query))'))
 

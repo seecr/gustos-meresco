@@ -3,8 +3,11 @@
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
 # Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
-# Copyright (C) 2014 SURF http://www.surf.nl
-# Copyright (C) 2014 Seecr (Seek You Too B.V.) http://seecr.nl
+# Copyright (C) 2014, 2021 SURF https://www.surf.nl
+# Copyright (C) 2014, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
+# Copyright (C) 2021 Stichting Kennisnet https://www.kennisnet.nl
+# Copyright (C) 2021 The Netherlands Institute for Sound and Vision https://beeldengeluid.nl
 #
 # This file is part of "Gustos-Meresco"
 #
@@ -40,7 +43,7 @@ class SruRecordUpdateReportTest(SeecrTestCase):
         groups = {}
         self.report.fillReport(groups=groups, collectedLog=collectedLog)
 
-        self.assertEquals({
+        self.assertEqual({
             'gustosGroup': {
                 'Upload count': {
                     'Uploads': { COUNT: 1 },
@@ -58,19 +61,19 @@ class SruRecordUpdateReportTest(SeecrTestCase):
         self.report.analyseLog(collectedLog=collectedLog)
         groups = {}
         self.report.fillReport(groups=groups, collectedLog=collectedLog)
-        self.assertEquals({}, groups)
+        self.assertEqual({}, groups)
 
     def testReportInterval(self):
         collectedLog = exampleUpdateLog()
         self.report.analyseLog(collectedLog=collectedLog)
         groups = {}
         self.report.fillReport(groups=groups, collectedLog=collectedLog)
-        self.assertEquals(1, groups['gustosGroup']['Upload count']['Uploads'][COUNT])
+        self.assertEqual(1, groups['gustosGroup']['Upload count']['Uploads'][COUNT])
         self.report.analyseLog(collectedLog=collectedLog)
         self.report.analyseLog(collectedLog=collectedLog)
         groups = {}
         self.report.fillReport(groups=groups, collectedLog=collectedLog)
-        self.assertEquals(3, groups['gustosGroup']['Upload count']['Uploads'][COUNT])
+        self.assertEqual(3, groups['gustosGroup']['Upload count']['Uploads'][COUNT])
 
 def exampleUpdateLog():
     return {
