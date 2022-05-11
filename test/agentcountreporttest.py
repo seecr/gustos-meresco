@@ -4,8 +4,8 @@
 #
 # Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
 # Copyright (C) 2014, 2021 SURF https://www.surf.nl
-# Copyright (C) 2014, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
-# Copyright (C) 2014, 2021 Stichting Kennisnet https://www.kennisnet.nl
+# Copyright (C) 2014, 2021-2022 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2014, 2021-2022 Stichting Kennisnet https://www.kennisnet.nl
 # Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
 # Copyright (C) 2021 The Netherlands Institute for Sound and Vision https://beeldengeluid.nl
 #
@@ -74,7 +74,7 @@ class AgentCountReportTest(SeecrTestCase):
         )
 
         result = list(compose(dna.all.handleRequest(Headers={'User-Agent': GOOGLE_BOT})))
-        self.assertEqual("We did it!", result[0])
+        self.assertEqual(b"We did it!", result[0])
 
         valuesKwarg = observer.calledMethods[-1].kwargs['values']
         self.assertEqual({'Gustos Group': {'User agents': {'Googlebot/2.1': {'count': 1}}}}, valuesKwarg)
