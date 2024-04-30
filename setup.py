@@ -28,7 +28,7 @@
 
 from distutils.core import setup
 
-version = '$Version: 0.1.x$'[9:-1].strip()
+version = '$Version: 0$'[9:-1].strip()
 
 from os import walk
 packages = []
