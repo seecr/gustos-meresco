@@ -4,7 +4,7 @@
 #
 # Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
 # Copyright (C) 2014, 2021 SURF https://www.surf.nl
-# Copyright (C) 2014, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2014, 2021, 2024 Seecr (Seek You Too B.V.) https://seecr.nl
 # Copyright (C) 2014 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
 # Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
 # Copyright (C) 2021 Stichting Kennisnet https://www.kennisnet.nl
@@ -33,15 +33,35 @@ from meresco.components.log.utils import getFirst
 from gustos.common.units import TIME
 
 class ResponseTimeReport(Report):
-    def __init__(self, curveName='total', subgroupName='ResponseTime', keys=None, **kwargs):
+    def __init__(self, curveName='total', subgroupName='ResponseTime', keys=None, selection="first", **kwargs):
         super(ResponseTimeReport, self).__init__(**kwargs)
         self._curveName = curveName
         self._subgroupName = subgroupName
+        self._valueSelection = selections[selection]
         if keys is None:
             keys = 'httpResponse', 'duration'
         self._scopeKey, self._responseTimeKey = keys
 
     def fillReport(self, groups, collectedLog):
-        responseTime = getFirst(self._getScoped(collectedLog, key=self._scopeKey), self._responseTimeKey, None)
+        responseTimes = map(floatOrNone, self._getScoped(collectedLog, key=self._scopeKey).get(self._responseTimeKey, []))
+        responseTime = self._valueSelection(responseTimes)
         if responseTime is not None:
-            self.subgroupReport(groups, self._subgroupName)[self._curveName] = {TIME: float(responseTime)}
+            self.subgroupReport(groups, self._subgroupName)[self._curveName] = {TIME: responseTime}
+
+floatOrNone = lambda f: f if f is None else float(f)
+
+def first(iterable, default=None):
+    for i in iterable:
+        return i
+    return default
+
+def sumOrNone(iterable):
+    items = [i for i in iterable if i is not None]
+    if not items:
+        return None
+    return sum(items)
+
+selections = {
+    "first": first,
+    "sum": sumOrNone,
+}
