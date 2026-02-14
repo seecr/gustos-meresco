@@ -2,7 +2,7 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
-# Copyright (C) 2014-2015, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2014-2015, 2021, 2026 Seecr (Seek You Too B.V.) https://seecr.nl
 # Copyright (C) 2014-2015 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
 # Copyright (C) 2015, 2021 Stichting Kennisnet https://www.kennisnet.nl
 # Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
@@ -31,8 +31,8 @@ from seecr.test import SeecrTestCase, CallTrace
 from weightless.core import be, consume
 from meresco.core import Observable
 from meresco.xml.utils import createElement, createSubElement
-from gustos.meresco.gustosoairecordcount import GustosOaiRecordCount
-from gustos.common.units import COUNT
+from gustos_meresco.gustosoairecordcount import GustosOaiRecordCount
+from gustos_common.units import COUNT
 from time import sleep
 
 class GustosOaiRecordCountTest(SeecrTestCase):

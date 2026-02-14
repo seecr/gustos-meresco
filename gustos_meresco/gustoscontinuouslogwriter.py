@@ -4,7 +4,7 @@
 #
 # Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
 # Copyright (C) 2014, 2021 SURF https://www.surf.nl
-# Copyright (C) 2014, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2014, 2021, 2026 Seecr (Seek You Too B.V.) https://seecr.nl
 # Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
 # Copyright (C) 2021 Stichting Kennisnet https://www.kennisnet.nl
 # Copyright (C) 2021 The Netherlands Institute for Sound and Vision https://beeldengeluid.nl
@@ -27,13 +27,22 @@
 #
 ## end license ##
 
-from gustos.common.units import COUNT
-from gustos.meresco.report import Report
+from meresco.core import Observable
+from gustos_meresco.utils import IntervalCheck
 
-class ClausesCountReport(Report):
+class GustosContinuousLogWriter(Observable):
+    def __init__(self, reactor, interval=1.0, **kwargs):
+        super(GustosContinuousLogWriter, self).__init__(**kwargs)
+        self._reactor = reactor
+        self._interval = interval
+        self._values = {}
+        self._reactor.addTimer(self._interval, self.report)
 
-    def fillReport(self, groups, collectedLog):
-        clauses = self._getScoped(collectedLog, key='cqlClauses', default=[None])[0]
-        if not clauses is None:
-            self.subgroupReport(groups, 'Query clauses')['boolean clauses'] = {COUNT: clauses}
+    def writeLog(self, collectedLog):
+        self.do.analyseLog(collectedLog=collectedLog)
+        self.do.fillReport(groups=self._values, collectedLog=collectedLog)
 
+    def report(self):
+        if len(self._values) > 0:
+            self.do.report(values=self._values)
+        self._reactor.addTimer(self._interval, self.report)

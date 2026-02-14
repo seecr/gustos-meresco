@@ -2,7 +2,7 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
-# Copyright (C) 2014-2015, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2014-2015, 2021, 2026 Seecr (Seek You Too B.V.) https://seecr.nl
 # Copyright (C) 2014-2015, 2021 Stichting Kennisnet https://www.kennisnet.nl
 # Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
 # Copyright (C) 2021 SURF https://www.surf.nl
@@ -27,7 +27,7 @@
 ## end license ##
 
 from seecr.test import SeecrTestCase, CallTrace
-from gustos.meresco import ClauseLog
+from gustos_meresco import ClauseLog
 from weightless.core import be, retval
 from collections import defaultdict
 from meresco.core import Observable

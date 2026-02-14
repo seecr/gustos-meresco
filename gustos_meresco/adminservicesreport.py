@@ -2,7 +2,7 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
-# Copyright (C) 2013-2015, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2013-2015, 2021, 2026 Seecr (Seek You Too B.V.) https://seecr.nl
 # Copyright (C) 2013-2014 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
 # Copyright (C) 2015 Koninklijke Bibliotheek (KB) http://www.kb.nl
 # Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
@@ -30,7 +30,7 @@
 
 import sys
 
-from gustos.common.units import COUNT
+from gustos_common.units import COUNT
 from meresco.core import Observable
 
 class AdminServicesReport(Observable):

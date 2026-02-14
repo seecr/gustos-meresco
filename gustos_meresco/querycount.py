@@ -2,11 +2,11 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
-# Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
-# Copyright (C) 2014, 2021 SURF https://www.surf.nl
-# Copyright (C) 2014, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2014-2015, 2021, 2026 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2014 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
+# Copyright (C) 2015, 2021 Stichting Kennisnet https://www.kennisnet.nl
 # Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
-# Copyright (C) 2021 Stichting Kennisnet https://www.kennisnet.nl
+# Copyright (C) 2021 SURF https://www.surf.nl
 # Copyright (C) 2021 The Netherlands Institute for Sound and Vision https://beeldengeluid.nl
 #
 # This file is part of "Gustos-Meresco"
@@ -27,21 +27,24 @@
 #
 ## end license ##
 
-from time import time
+from gustos_common.units import COUNT
+from gustos_meresco.utils import IntervalCheck
 
-class IntervalCheck(object):
-    def __init__(self, interval):
-        self._interval = interval
-        self._timeLastReportSent = 0
-        self.check = self._check
-        self.done = self._done
-        if self._interval is None:
-            self.check = lambda: (0, True)
-            self.done = lambda now: None
+from meresco.core import Observable
 
-    def _check(self):
-        now = time()
-        return now, now - self._timeLastReportSent > self._interval
 
-    def _done(self, aTime):
-        self._timeLastReportSent = aTime
+class QueryCount(Observable):
+    def __init__(self, type, interval=1, **kwargs):
+        Observable.__init__(self, **kwargs)
+        self._type = type
+        self._count = 0
+        self._interval = IntervalCheck(interval)
+
+    def handleQueryTimes(self, **kwargs):
+        self._count += 1
+        now, shouldReport = self._interval.check()
+        if shouldReport:
+            self.do.report(values={"%s" % self._type: {
+                    "QueryCount": {"Queries": {COUNT: self._count}},
+                }})
+            self._interval.done(now)

@@ -4,7 +4,7 @@
 #
 # Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
 # Copyright (C) 2014, 2021 SURF https://www.surf.nl
-# Copyright (C) 2014, 2021-2022 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2014, 2021-2022, 2026 Seecr (Seek You Too B.V.) https://seecr.nl
 # Copyright (C) 2014, 2021-2022 Stichting Kennisnet https://www.kennisnet.nl
 # Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
 # Copyright (C) 2021 The Netherlands Institute for Sound and Vision https://beeldengeluid.nl
@@ -28,8 +28,8 @@
 ## end license ##
 
 from seecr.test import SeecrTestCase, CallTrace
-from gustos.meresco import AgentCountReport, GustosLogWriter
-from gustos.meresco.agentcountreport import extractUserAgentString
+from gustos_meresco import AgentCountReport, GustosLogWriter
+from gustos_meresco.agentcountreport import extractUserAgentString
 
 from meresco.components.log import LogCollector, HandleRequestLog, LogCollectorScope
 

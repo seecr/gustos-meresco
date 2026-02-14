@@ -4,7 +4,7 @@
 #
 # Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
 # Copyright (C) 2014, 2021 SURF https://www.surf.nl
-# Copyright (C) 2014, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2014, 2021, 2026 Seecr (Seek You Too B.V.) https://seecr.nl
 # Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
 # Copyright (C) 2021 Stichting Kennisnet https://www.kennisnet.nl
 # Copyright (C) 2021 The Netherlands Institute for Sound and Vision https://beeldengeluid.nl
@@ -27,35 +27,36 @@
 #
 ## end license ##
 
-from meresco.components.log.utils import getFirst, getScoped
-from gustos.common.units import COUNT
-from gustos.meresco.report import Report
+from gustos_meresco.report import Report
+from collections import defaultdict
+from meresco.components.log.utils import getFirst
+from gustos_common.units import COUNT
 
-class SruRecordUpdateCountReport(Report):
+import re
+userAgentRe = re.compile(r"\S+ \((?P<usefull>[^)]*)\)\S*")
+def extractUserAgentString(userAgentString):
+    match = userAgentRe.match(userAgentString if userAgentString else '')
+    if not match:
+        return None
+    usefull = match.groupdict()['usefull']
+    parts = usefull.split(';')
+    if len(parts) == 1:
+        return usefull
+
+    return parts[1].strip() if parts[0].lower() == 'compatible' else parts[0].strip()
+
+class AgentCountReport(Report):
     def __init__(self, **kwargs):
-        super(SruRecordUpdateCountReport, self).__init__(**kwargs)
-        self._counts = {
-            'sruAdd': 0,
-            'sruDelete': 0,
-            'sruInvalid': 0,
-        }
+        super(AgentCountReport, self).__init__(**kwargs)
+        self._counts = defaultdict(int)
 
     def analyseLog(self, collectedLog):
-        sruRecordUpdate = self._getScoped(collectedLog, key='sruRecordUpdate')
-        addIdentifier = getFirst(sruRecordUpdate, 'add')
-        deleteIdentifier = getFirst(sruRecordUpdate, 'delete')
-        invalidIdentifier = getFirst(sruRecordUpdate, 'invalid')
-        if addIdentifier is None and deleteIdentifier is None:
-            return
-        self._counts['sruAdd'] += (0 if addIdentifier is None else 1)
-        self._counts['sruDelete'] += (0 if deleteIdentifier is None else 1)
-        self._counts['sruInvalid'] += (0 if invalidIdentifier is None else 1)
+        httpRequest = self._getScoped(collectedLog, key='httpRequest')
+        headers = getFirst(httpRequest, 'Headers', {})
+        userAgent = extractUserAgentString(headers.get('User-Agent', None))
+        self._counts[userAgent] += 1
 
     def fillReport(self, groups, collectedLog):
-        groupReport = self.groupReport(groups)
-        groupReport['Upload count'] = {
-                'Add': { COUNT: self._counts['sruAdd'] },
-                'Delete': { COUNT: self._counts['sruDelete']},
-                'Uploads': { COUNT: self._counts['sruAdd'] + self._counts['sruDelete'] },
-                'Invalid': { COUNT: self._counts['sruInvalid']},
-            }
+        queriesCount = self.subgroupReport(groups, 'User agents')
+        for userAgent, count in self._counts.items():
+            queriesCount[userAgent] = {COUNT: count }

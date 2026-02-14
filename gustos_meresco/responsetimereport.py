@@ -4,7 +4,7 @@
 #
 # Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
 # Copyright (C) 2014, 2021 SURF https://www.surf.nl
-# Copyright (C) 2014, 2021, 2024 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2014, 2021, 2024, 2026 Seecr (Seek You Too B.V.) https://seecr.nl
 # Copyright (C) 2014 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
 # Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
 # Copyright (C) 2021 Stichting Kennisnet https://www.kennisnet.nl
@@ -28,9 +28,9 @@
 #
 ## end license ##
 
-from gustos.meresco.report import Report
+from gustos_meresco.report import Report
 from meresco.components.log.utils import getFirst
-from gustos.common.units import TIME
+from gustos_common.units import TIME
 
 class ResponseTimeReport(Report):
     def __init__(self, curveName='total', subgroupName='ResponseTime', keys=None, selection="first", **kwargs):

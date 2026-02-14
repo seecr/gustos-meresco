@@ -2,7 +2,7 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
-# Copyright (C) 2014-2015, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2014-2015, 2021, 2026 Seecr (Seek You Too B.V.) https://seecr.nl
 # Copyright (C) 2014 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
 # Copyright (C) 2015 Koninklijke Bibliotheek (KB) http://www.kb.nl
 # Copyright (C) 2015, 2021 Stichting Kennisnet https://www.kennisnet.nl
@@ -29,10 +29,10 @@
 ## end license ##
 
 from seecr.test import SeecrTestCase
-from gustos.meresco import UpdatableGustosClient
+from gustos_meresco import UpdatableGustosClient
 from seecr.test.portnumbergenerator import PortNumberGenerator
 from seecr.test.udplistenandlog import UdpListenAndLog
-from gustos.common.units import COUNT
+from gustos_common.units import COUNT
 from weightless.core import consume
 from time import sleep
 from simplejson import loads

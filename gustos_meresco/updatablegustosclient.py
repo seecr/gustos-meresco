@@ -2,7 +2,7 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
-# Copyright (C) 2013-2015, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2013-2015, 2021, 2026 Seecr (Seek You Too B.V.) https://seecr.nl
 # Copyright (C) 2013-2014 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
 # Copyright (C) 2015 Koninklijke Bibliotheek (KB) http://www.kb.nl
 # Copyright (C) 2015, 2021 Stichting Kennisnet https://www.kennisnet.nl
@@ -28,7 +28,7 @@
 #
 ## end license ##
 
-from gustos.client import Client
+from gustos_client import Client
 
 from meresco.core import Observable
 

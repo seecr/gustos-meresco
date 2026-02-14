@@ -4,7 +4,7 @@
 #
 # Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
 # Copyright (C) 2014, 2021 SURF https://www.surf.nl
-# Copyright (C) 2014, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2014, 2021, 2026 Seecr (Seek You Too B.V.) https://seecr.nl
 # Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
 # Copyright (C) 2021 Stichting Kennisnet https://www.kennisnet.nl
 # Copyright (C) 2021 The Netherlands Institute for Sound and Vision https://beeldengeluid.nl
@@ -28,8 +28,8 @@
 ## end license ##
 
 from seecr.test import SeecrTestCase
-from gustos.meresco import UploadSizeReport
-from gustos.common.units import MEMORY
+from gustos_meresco import UploadSizeReport
+from gustos_common.units import MEMORY
 
 class UploadSizeReportTest(SeecrTestCase):
     maxDiff = None

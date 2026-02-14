@@ -2,9 +2,10 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
-# Copyright (C) 2014, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
+# Copyright (C) 2014, 2021 SURF https://www.surf.nl
+# Copyright (C) 2014, 2021, 2026 Seecr (Seek You Too B.V.) https://seecr.nl
 # Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
-# Copyright (C) 2021 SURF https://www.surf.nl
 # Copyright (C) 2021 Stichting Kennisnet https://www.kennisnet.nl
 # Copyright (C) 2021 The Netherlands Institute for Sound and Vision https://beeldengeluid.nl
 #
@@ -26,25 +27,13 @@
 #
 ## end license ##
 
-set -e
-mydir=$(cd $(dirname $0);pwd)
+from meresco.components.log.utils import getFirst, getScoped
+from gustos_common.units import MEMORY
+from gustos_meresco.report import Report
 
-source /usr/share/seecr-tools/functions.d/test
-
-rm -rf tmp build
-
-definePythonVars
-
-${PYTHON} setup.py install --root tmp
-cp -r test tmp/test
-
-removeDoNotDistribute tmp
-
-export SEECRTEST_USR_BIN="${mydir}/tmp/usr/bin"
-if [ -z "$@" ]; then
-    runtests "alltests.sh"
-else
-    runtests "$@"
-fi
-
-rm -rf tmp build
+class UploadSizeReport(Report):
+    def fillReport(self, groups, collectedLog):
+        httpRequest = getScoped(collectedLog, scopeNames=self._scopeNames, key='httpRequest')
+        bodySize = getFirst(httpRequest, 'bodySize')
+        if bodySize:
+            self.subgroupReport(groups, 'Upload size')['size'] = {MEMORY: bodySize}

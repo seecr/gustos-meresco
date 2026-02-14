@@ -3,7 +3,7 @@
 #
 # "Gustos-Meresco" is a set of Gustos components for Meresco based projects.
 #
-# Copyright (C) 2014-2015, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2014-2015, 2021, 2026 Seecr (Seek You Too B.V.) https://seecr.nl
 # Copyright (C) 2014 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
 # Copyright (C) 2015, 2021 Stichting Kennisnet https://www.kennisnet.nl
 # Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
@@ -30,11 +30,11 @@
 
 from seecr.test import SeecrTestCase, CallTrace
 
-from gustos.meresco import ResponseTime
+from gustos_meresco import ResponseTime
 
 from decimal import Decimal
 from time import sleep
-from gustos.common.units import TIME, COUNT
+from gustos_common.units import TIME, COUNT
 from weightless.core import be
 from meresco.core import Observable
 

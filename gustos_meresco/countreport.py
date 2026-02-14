@@ -4,7 +4,8 @@
 #
 # Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
 # Copyright (C) 2014, 2021 SURF https://www.surf.nl
-# Copyright (C) 2014, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2014, 2021, 2026 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2014 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
 # Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
 # Copyright (C) 2021 Stichting Kennisnet https://www.kennisnet.nl
 # Copyright (C) 2021 The Netherlands Institute for Sound and Vision https://beeldengeluid.nl
@@ -27,36 +28,24 @@
 #
 ## end license ##
 
-from gustos.meresco.report import Report
-from collections import defaultdict
-from meresco.components.log.utils import getFirst
-from gustos.common.units import COUNT
+from gustos_common.units import COUNT
+from gustos_meresco.report import Report
 
-import re
-userAgentRe = re.compile(r"\S+ \((?P<usefull>[^)]*)\)\S*")
-def extractUserAgentString(userAgentString):
-    match = userAgentRe.match(userAgentString if userAgentString else '')
-    if not match:
-        return None
-    usefull = match.groupdict()['usefull']
-    parts = usefull.split(';')
-    if len(parts) == 1:
-        return usefull
-
-    return parts[1].strip() if parts[0].lower() == 'compatible' else parts[0].strip()
-
-class AgentCountReport(Report):
-    def __init__(self, **kwargs):
-        super(AgentCountReport, self).__init__(**kwargs)
-        self._counts = defaultdict(int)
+class CountReport(Report):
+    def __init__(self, curveName='total', subgroupName='Counts', keys=None, **kwargs):
+        super(CountReport, self).__init__(**kwargs)
+        self._curveName = curveName
+        self._subgroupName = subgroupName
+        if keys is None:
+            keys = None, None
+        self._scopeKey, self._countKey = keys
+        self._counts = 0
 
     def analyseLog(self, collectedLog):
-        httpRequest = self._getScoped(collectedLog, key='httpRequest')
-        headers = getFirst(httpRequest, 'Headers', {})
-        userAgent = extractUserAgentString(headers.get('User-Agent', None))
-        self._counts[userAgent] += 1
+        if self._scopeKey is None:
+            self._counts += 1
+        else:
+            self._counts += len(self._getScoped(collectedLog, key=self._scopeKey).get(self._countKey, []))
 
     def fillReport(self, groups, collectedLog):
-        queriesCount = self.subgroupReport(groups, 'User agents')
-        for userAgent, count in self._counts.items():
-            queriesCount[userAgent] = {COUNT: count }
+        self.subgroupReport(groups, self._subgroupName)[self._curveName] = {COUNT: self._counts }

@@ -4,9 +4,10 @@
 #
 # Copyright (C) 2014 Maastricht University Library http://www.maastrichtuniversity.nl/web/Library/home.htm
 # Copyright (C) 2014, 2021 SURF https://www.surf.nl
-# Copyright (C) 2014, 2021 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2014-2015, 2021, 2026 Seecr (Seek You Too B.V.) https://seecr.nl
+# Copyright (C) 2015 Stichting Bibliotheek.nl (BNL) http://www.bibliotheek.nl
+# Copyright (C) 2015, 2021 Stichting Kennisnet https://www.kennisnet.nl
 # Copyright (C) 2021 Data Archiving and Network Services https://dans.knaw.nl
-# Copyright (C) 2021 Stichting Kennisnet https://www.kennisnet.nl
 # Copyright (C) 2021 The Netherlands Institute for Sound and Vision https://beeldengeluid.nl
 #
 # This file is part of "Gustos-Meresco"
@@ -27,16 +28,19 @@
 #
 ## end license ##
 
-from gustos.meresco.report import Report
-from meresco.components.log.utils import getFirst
-from gustos.common.units import MEMORY
-
-class ResponseSizeReport(Report):
-    def __init__(self, subgroupName='Query result size', **kwargs):
-        super(ResponseSizeReport, self).__init__(**kwargs)
-        self._subgroupName = subgroupName
-
-    def fillReport(self, groups, collectedLog):
-        responseSize = getFirst(self._getScoped(collectedLog, key='httpResponse'), 'size', 0)
-        if responseSize:
-            self.subgroupReport(groups, self._subgroupName)['size'] = {MEMORY: responseSize}
+from .clauselog import ClauseLog
+from .gustoslogwriter import GustosTimedLogWriter, GustosLogWriter
+from .gustoscontinuouslogwriter import GustosContinuousLogWriter
+from .sruquerycountreport import SruQueryCountReport
+from .sruresponsetimesreport import SruResponseTimesReport
+from .responsesizereport import ResponseSizeReport
+from .clausescountreport import ClausesCountReport
+from .responsetimereport import ResponseTimeReport
+from .countreport import CountReport
+from .agentcountreport import AgentCountReport
+from .uploadsizereport import UploadSizeReport
+from .srurecordupdatecountreport import SruRecordUpdateCountReport
+from .gustosoairecordcount import GustosOaiRecordCount
+from .responsetime import ResponseTime
+from .querycount import QueryCount
+from .updatablegustosclient import UpdatableGustosClient
